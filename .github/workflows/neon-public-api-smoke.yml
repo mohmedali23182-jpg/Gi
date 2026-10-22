@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --retry 3 --retry-delay 2 --max-time 30 -sS -D /tmp/headers.txt -o /tmp/health.json "$BASE_URL/health"
+          curl --retry 3 --retry-delay 2 --max-time 30 -sS -H "Cache-Control: no-cache" -D /tmp/headers.txt -o /tmp/health.json "$BASE_URL/health?verification=deployment4"
           python3 - <<'PY'
           import json
           d=json.load(open('/tmp/health.json'))
@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --max-time 30 -sS -o /tmp/catalog.json "$BASE_URL/v1/catalog?locale=ar"
+          curl --max-time 30 -sS -o /tmp/catalog.json "$BASE_URL/v1/catalog?locale=ar&verification=deployment4"
           python3 - <<'PY'
           import json
           d=json.load(open('/tmp/catalog.json'))
@@ -42,7 +42,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --max-time 30 -sS -o /tmp/systems.json "$BASE_URL/v1/systems?locale=ar"
+          curl --max-time 30 -sS -o /tmp/systems.json "$BASE_URL/v1/systems?locale=ar&verification=deployment4"
           python3 - <<'PY'
           import json
           d=json.load(open('/tmp/systems.json'))
