@@ -207,6 +207,17 @@ class MainViewModel(
         }
     }
 
+    fun browseCloudCatalog() {
+        viewModelScope.launch {
+            val language = if (container.preferencesDataStore.settingsFlow.value.language == AppLanguage.ENGLISH) "en" else "ar"
+            when (val result = container.knowledgeRepository.discoverCloudPacks(language)) {
+                is AppResult.Success -> _transientBannerMessage.value =
+                    "تم تحديث قائمة الحزم المتاحة من Neon. حزم جديدة: " + result.data
+                is AppResult.Error -> _transientBannerMessage.value = result.error.messageAr
+            }
+        }
+    }
+
     fun deleteContentPack(packId: String) {
         viewModelScope.launch {
             when (val res = container.knowledgeRepository.deletePack(packId)) {
