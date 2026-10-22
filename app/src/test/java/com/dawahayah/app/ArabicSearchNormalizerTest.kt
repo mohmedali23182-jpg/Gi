@@ -26,7 +26,7 @@ class ArabicSearchNormalizerTest {
         val tokens = ArabicSearchNormalizer.buildIndexableTokens("القلب", "Heart", "Cor")
         assertTrue(tokens.contains("القلب"))
         assertTrue(tokens.contains("cor"))
-        assertTrue(tokens.contains("فؤاد"))
+        assertTrue(tokens.contains(ArabicSearchNormalizer.normalize("فؤاد")))
         assertTrue(tokens.contains("cardiac"))
     }
 }

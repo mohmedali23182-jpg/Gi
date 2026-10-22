@@ -1,5 +1,7 @@
+-- FIX: Stage 01 already defines diseases.icd11_code and diseases.imported_at TIMESTAMPTZ.
+-- FIX: Stage 01 uses sources(id), not medical_sources(id).
 -- =============================================================================
--- Dawa & Hayah (دواء وحياة) — Stage 02 Neon PostgreSQL Schema Migration
+-- Dawa & Hayah (دواء وحياة) — Stage 02 Neon PostgreSQL Schema Migration — corrected Stage 01 compatibility
 -- File: neon/migrations/002_stage02_anatomy_diseases_schema.sql
 -- Purpose: Expands the Stage 01 foundational schema with Stage 02 tables for:
 --   - 13 Human Body Systems (inter-system relations, detailed pathway flags)
@@ -10,7 +12,6 @@
 --   - Source Attributions (imported_at vs human_reviewed_at)
 -- =============================================================================
 
-BEGIN;
 
 -- 1. Expand body_systems
 ALTER TABLE body_systems
@@ -42,7 +43,7 @@ CREATE TABLE IF NOT EXISTS anatomical_structures (
     function_en TEXT NOT NULL,
     clinical_relevance_ar TEXT NOT NULL,
     clinical_relevance_en TEXT NOT NULL,
-    source_id TEXT NOT NULL REFERENCES medical_sources(id),
+    source_id TEXT NOT NULL REFERENCES sources(id),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -116,11 +117,9 @@ CREATE INDEX IF NOT EXISTS idx_anatomy_3d_assets_organ_id ON anatomy_3d_assets(o
 
 -- 8. Expand diseases & add structured A-J sections
 ALTER TABLE diseases
-    ADD COLUMN IF NOT EXISTS icd11_code TEXT NOT NULL DEFAULT '',
     ADD COLUMN IF NOT EXISTS secondary_system_ids JSONB NOT NULL DEFAULT '[]'::jsonb,
     ADD COLUMN IF NOT EXISTS affected_organ_ids JSONB NOT NULL DEFAULT '[]'::jsonb,
     ADD COLUMN IF NOT EXISTS related_drug_classes JSONB NOT NULL DEFAULT '[]'::jsonb,
-    ADD COLUMN IF NOT EXISTS imported_at DATE NOT NULL DEFAULT CURRENT_DATE,
     ADD COLUMN IF NOT EXISTS human_reviewed_at DATE;
 
 CREATE TABLE IF NOT EXISTS disease_sections (
@@ -154,10 +153,9 @@ CREATE TABLE IF NOT EXISTS source_attributions (
     id TEXT PRIMARY KEY,
     entity_id TEXT NOT NULL,
     entity_type TEXT NOT NULL,
-    source_id TEXT NOT NULL REFERENCES medical_sources(id),
+    source_id TEXT NOT NULL REFERENCES sources(id),
     imported_at DATE NOT NULL,
     human_reviewed_at DATE,
     review_status TEXT NOT NULL CHECK (review_status IN ('draft', 'under_review', 'verified', 'published', 'archived'))
 );
 
-COMMIT;
