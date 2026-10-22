@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - "ai-studio/stage-**"
+      - "work/stage-**"
   pull_request:
     branches:
       - main
@@ -38,7 +39,15 @@ jobs:
           echo "Security check passed: zero hardcoded secrets in app/src/main/ (test fixtures excluded)."
 
       - name: Run Kotlin Unit Tests (Search Normalizer, SHA-256 Verifier, Pack Manager)
-        run: gradle :app:testDebugUnitTest --stacktrace
+        run: gradle :app:testDebugUnitTest --stacktrace --info
+
+      - name: Upload JVM Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dawa-hayah-jvm-test-reports
+          path: app/build/reports/tests/testDebugUnitTest/
+          retention-days: 7
 
       - name: Run Android Lint
         run: gradle :app:lintDebug --stacktrace
