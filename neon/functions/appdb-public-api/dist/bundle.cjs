@@ -5126,7 +5126,8 @@ var index_default = {
       }
       return json({ error: "Not found" }, 404);
     } catch (error) {
-      console.error("API failure:", error?.code || "unknown");
+      const safeMessage = String(error?.message || "unknown").replace(/postgres(?:ql)?:\/\/[^\s]+/gi, "[redacted-db-url]").replace(/npg_[A-Za-z0-9_-]+/g, "[redacted]");
+      console.error("API failure:", String(error?.code || error?.name || "unknown"), safeMessage.slice(0, 240));
       return json({ error: "Service temporarily unavailable" }, 503);
     }
   }
