@@ -14,18 +14,20 @@ android {
         applicationId = "com.dawahayah.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0-stage01"
+        versionCode = 3
+        versionName = "0.3.0-stage03-dev"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
 
-        // Public API base URL only (empty in Stage 01 until Neon Functions are deployed externally).
-        // NEVER place DATABASE_URL, NEON_API_KEY, or S3 secrets in BuildConfig.
-        buildConfigField("String", "NEON_PUBLIC_API_BASE_URL", "\"\"")
-        buildConfigField("String", "STAGE_TAG", "\"STAGE_01_NATIVE_FOUNDATION\"")
+        // Public PostgREST URL is safe to embed. Database credentials remain server-side.
+        val neonDataApiUrl = providers.gradleProperty("NEON_PUBLIC_API_BASE_URL")
+            .orElse("https://ep-broad-violet-b96xtyh6.apirest.c-7.eu-central-1.aws.neon.tech/appdb/rest/v1")
+            .get()
+        buildConfigField("String", "NEON_PUBLIC_API_BASE_URL", "\"${neonDataApiUrl}\"")
+        buildConfigField("String", "STAGE_TAG", "\"STAGE_03_MEDICINES_DEVELOPMENT\"")
     }
 
     buildTypes {
