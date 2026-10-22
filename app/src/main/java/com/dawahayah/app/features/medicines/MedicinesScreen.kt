@@ -1,6 +1,8 @@
 package com.dawahayah.app.features.medicines
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -78,7 +80,7 @@ fun MedicinesScreen(
                 onValueChange = { searchTerm = it },
                 label = { Text(if (isAr) "بحث بالاسم العلمي أو الفئة" else "Search generic name or class") },
                 singleLine = true,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxWidth()
             )
         }
         items(filtered, key = { it.id }) { ingredient ->
