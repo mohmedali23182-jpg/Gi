@@ -18,6 +18,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.io.IOException
+import java.net.URL
+import javax.net.ssl.HttpsURLConnection
 
 @Serializable
 data class BundledPackLessonSectionDto(
@@ -85,22 +88,19 @@ class ContentPackManager(
                 )
             )
 
-        if (!currentRecord.isBundledOfflineDemoAvailable) {
-            // Cloud pack: check remote backend
-            return@withContext when (val remoteManifest = remoteDataSource.fetchPackManifest(packId)) {
+        // One install pipeline for bundled and optional cloud packs.
+        val remoteManifest = if (!currentRecord.isBundledOfflineDemoAvailable) {
+            when (val result = remoteDataSource.fetchPackManifest(packId)) {
+                is AppResult.Success -> result.data
                 is AppResult.Error -> {
-                    val failedRecord = currentRecord.copy(
-                        installState = PackInstallState.NOT_DOWNLOADED.name,
-                        lastErrorMessage = remoteManifest.error.messageAr
-                    )
-                    dao.upsertPackRecord(failedRecord)
-                    remoteManifest
-                }
-                is AppResult.Success -> {
-                    AppResult.Error(AppError.CloudBackendNotConfigured)
+                    dao.upsertPackRecord(currentRecord.copy(
+                        installState = PackInstallState.FAILED.name,
+                        lastErrorMessage = result.error.messageAr
+                    ))
+                    return@withContext result
                 }
             }
-        }
+        } else null
 
         // 1. Mark QUEUED -> RUNNING
         val runningRecord = currentRecord.copy(
@@ -110,17 +110,28 @@ class ContentPackManager(
         )
         dao.upsertPackRecord(runningRecord)
 
-        val manifestPath = "packs/$packId/manifest.json"
-        val manifestText = try {
-            context.assets.open(manifestPath).bufferedReader(Charsets.UTF_8).use { it.readText() }
-        } catch (e: Exception) {
-            return@withContext failPack(
-                currentRecord,
-                AppError.MissingPackFiles(listOf(manifestPath))
-            )
+        val manifest = if (remoteManifest != null) {
+            remoteManifest
+        } else {
+            val manifestPath = "packs/$packId/manifest.json"
+            val manifestText = try {
+                context.assets.open(manifestPath).bufferedReader(Charsets.UTF_8).use { it.readText() }
+            } catch (e: Exception) {
+                return@withContext failPack(currentRecord, AppError.MissingPackFiles(listOf(manifestPath)))
+            }
+            json.decodeFromString<ContentPackManifest>(manifestText)
         }
 
-        val manifest = json.decodeFromString<ContentPackManifest>(manifestText)
+        if (manifest.packId != packId || manifest.files.isEmpty() ||
+            manifest.files.size > 300 || manifest.sizeBytes <= 0L ||
+            manifest.sizeBytes > 250L * 1024L * 1024L ||
+            manifest.schemaVersion != 1
+        ) {
+            return@withContext failPack(currentRecord, AppError.GeneralFailure(
+                reasonAr = "حزمة غير متوافقة أو كبيرة جدًا أو لا تطابق معرفها.",
+                reasonEn = "Incompatible, oversized, or mismatched content pack."
+            ))
+        }
 
         // Check available storage
         val usableSpace = context.filesDir.usableSpace
@@ -150,15 +161,52 @@ class ContentPackManager(
                 )
             }
 
-            val assetSourcePath = "packs/$packId/${fileEntry.path}"
             val rawBytes = try {
-                context.assets.open(assetSourcePath).use { it.readBytes() }
+                if (remoteManifest == null) {
+                    context.assets.open("packs/$packId/${fileEntry.path}").use { it.readBytes() }
+                } else {
+                    val access = when (val result = remoteDataSource.fetchAssetAccess(fileEntry.assetId)) {
+                        is AppResult.Success -> result.data
+                        is AppResult.Error -> throw IOException(result.error.messageEn)
+                    }
+                    if (access.sha256 != fileEntry.sha256 ||
+                        access.sizeBytes != fileEntry.sizeBytes ||
+                        !IntegrityVerifier.isSecureHttpsEndpoint(access.downloadUrl)
+                    ) throw IOException("Asset metadata verification failed")
+                    if (fileEntry.sizeBytes > 250L * 1024L * 1024L) {
+                        throw IOException("Asset size exceeds safety limit")
+                    }
+                    val connection = URL(access.downloadUrl).openConnection() as HttpsURLConnection
+                    connection.connectTimeout = 15000
+                    connection.readTimeout = 60000
+                    connection.instanceFollowRedirects = false
+                    try {
+                        if (connection.responseCode !in 200..299) {
+                            throw IOException("Asset response HTTP ${connection.responseCode}")
+                        }
+                        connection.inputStream.use { input ->
+                            val output = java.io.ByteArrayOutputStream()
+                            val buffer = ByteArray(32 * 1024)
+                            var received = 0L
+                            while (true) {
+                                val n = input.read(buffer)
+                                if (n < 0) break
+                                received += n
+                                if (received > fileEntry.sizeBytes) throw IOException("Excessive asset bytes")
+                                output.write(buffer, 0, n)
+                            }
+                            output.toByteArray()
+                        }
+                    } finally {
+                        connection.disconnect()
+                    }
+                }
             } catch (e: Exception) {
                 packStagingDir.deleteRecursively()
-                return@withContext failPack(
-                    currentRecord,
-                    AppError.MissingPackFiles(listOf(fileEntry.path))
-                )
+                return@withContext failPack(currentRecord, AppError.GeneralFailure(
+                    reasonAr = "تعذر تحميل ملف الحزمة أو التحقق منه: ${fileEntry.path}",
+                    reasonEn = "Failed to obtain or verify pack asset: ${fileEntry.path}"
+                ))
             }
 
             val bytesToWrite = if (simulateCorruptedHash) {
