@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -209,7 +210,7 @@ class MainViewModel(
 
     fun browseCloudCatalog() {
         viewModelScope.launch {
-            val language = if (container.preferencesDataStore.settingsFlow.value.language == AppLanguage.ENGLISH) "en" else "ar"
+            val language = if (container.preferencesDataStore.settingsFlow.first().language == AppLanguage.ENGLISH) "en" else "ar"
             when (val result = container.knowledgeRepository.discoverCloudPacks(language)) {
                 is AppResult.Success -> _transientBannerMessage.value =
                     "تم تحديث قائمة الحزم المتاحة من Neon. حزم جديدة: " + result.data
