@@ -357,6 +357,48 @@ class ContentPackManager(
             AppResult.Success(resetRecord)
         }
 
+
+    /**
+     * Discover cloud metadata on demand; do not download any payload automatically.
+     * Persist only the pack listing in Room so users can choose granular downloads.
+     */
+    suspend fun discoverCloudPacks(locale: String): AppResult<Int> = withContext(Dispatchers.IO) {
+        when (val catalog = remoteDataSource.fetchCatalog(locale)) {
+            is AppResult.Error -> catalog
+            is AppResult.Success -> {
+                var added = 0
+                for (pack in catalog.data.availablePacks) {
+                    if (pack.packId.isBlank() || pack.files.isEmpty() || pack.sizeBytes <= 0L) continue
+                    val current = dao.getPackRecordById(pack.packId)
+                    if (current?.isBundledOfflineDemoAvailable == true) continue
+                    dao.upsertPackRecord(PackRecordEntity(
+                        id = pack.packId,
+                        version = pack.version,
+                        titleAr = pack.titleAr,
+                        titleEn = pack.titleEn,
+                        installState = if (current?.installState == PackInstallState.COMPLETED.name
+                            && current.version == pack.version) PackInstallState.COMPLETED.name
+                            else PackInstallState.NOT_DOWNLOADED.name,
+                        installedAt = if (current?.version == pack.version) current.installedAt else null,
+                        sizeBytes = pack.sizeBytes,
+                        downloadedBytes = if (current?.version == pack.version) current.downloadedBytes else 0L,
+                        locale = pack.language,
+                        scopeType = pack.scopeType,
+                        scopeId = pack.scopeId,
+                        assetQuality = pack.quality,
+                        license = pack.license,
+                        attribution = pack.attribution,
+                        isBundledOfflineDemoAvailable = false,
+                        companionDependencyNotice = pack.dependencies.joinToString(", ").ifEmpty { null },
+                        lastErrorMessage = null
+                    ))
+                    added++
+                }
+                AppResult.Success(added)
+            }
+        }
+    }
+
     private suspend fun failPack(
         record: PackRecordEntity,
         error: AppError
