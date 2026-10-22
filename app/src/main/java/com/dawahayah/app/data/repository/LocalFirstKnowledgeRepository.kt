@@ -421,6 +421,9 @@ class LocalFirstKnowledgeRepository(
     suspend fun installPack(packId: String, simulateCorruptedHash: Boolean = false) =
         contentPackManager.installPack(packId, simulateCorruptedHash)
 
+    suspend fun discoverCloudPacks(locale: String) =
+        contentPackManager.discoverCloudPacks(locale)
+
     suspend fun deletePack(packId: String) =
         contentPackManager.deleteInstalledPack(packId)
 
