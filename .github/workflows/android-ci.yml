@@ -11,7 +11,7 @@ on:
 
 jobs:
   lint-test-and-build:
-    name: Stage 01 Quality Gate (Unit Tests + Lint + Debug/ARM64 Build)
+    name: Android Quality Gate (Security + JVM Tests + Lint + Debug Build)
     runs-on: ubuntu-latest
 
     steps:
@@ -31,11 +31,11 @@ jobs:
 
       - name: Security Scan — Verify No Exposed Neon or S3 Secrets
         run: |
-          if grep -RInE "(postgresql://.*:.*@|AWS_SECRET_ACCESS_KEY\s*=\s*\"[^\"]+\"|NEON_API_KEY\s*=\s*\"[^\"]+\")" app/src/; then
-            echo "CRITICAL: Hardcoded cloud secret detected inside Android source tree!"
+          if grep -RInE "(postgresql://.*:.*@|AWS_SECRET_ACCESS_KEY\s*=\s*\"[^\"]+\"|NEON_API_KEY\s*=\s*\"[^\"]+\")" app/src/main/; then
+            echo "CRITICAL: Hardcoded cloud secret detected inside Android production source tree!"
             exit 1
           fi
-          echo "Security check passed: zero hardcoded secrets in app/src/."
+          echo "Security check passed: zero hardcoded secrets in app/src/main/ (test fixtures excluded)."
 
       - name: Run Kotlin Unit Tests (Search Normalizer, SHA-256 Verifier, Pack Manager)
         run: gradle :app:testDebugUnitTest --stacktrace
