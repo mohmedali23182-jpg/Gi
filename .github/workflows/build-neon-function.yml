@@ -1,0 +1,50 @@
+name: Bundle Neon Public Read Function (node-postgres)
+on:
+  push:
+    branches:
+      - work/stage-03-medications-neon-appdb
+    paths:
+      - neon/functions/appdb-public-api/index.mjs
+      - neon/functions/appdb-public-api/package.json
+      - .github/workflows/build-neon-function.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated build dependencies
+        run: npm install --prefix neon/functions/appdb-public-api --no-save --no-package-lock pg@8.16.3 esbuild@0.25.12
+      - name: Bundle Node dependencies into distributable function
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd neon/functions/appdb-public-api
+          ./node_modules/.bin/esbuild index.mjs --bundle --platform=node --target=node24 --format=cjs --outfile=dist/bundle.cjs
+          cat > dist/index.mjs <<'EOF'
+          import { createRequire } from 'node:module';
+          const require = createRequire(import.meta.url);
+          const moduleValue = require('./bundle.cjs');
+          export default moduleValue.default ?? moduleValue;
+          EOF
+          node -e "const out=require('./dist/bundle.cjs'); if(typeof (out.default ?? out).fetch !== 'function') process.exit(1)"
+      - name: Commit exact bundled bytes for Neon MCP deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f neon/functions/appdb-public-api/dist/index.mjs neon/functions/appdb-public-api/dist/bundle.cjs
+          if ! git diff --cached --quiet; then
+            git commit -m "build(neon): bundle public read function with pg runtime dependency"
+            git push origin HEAD:work/stage-03-medications-neon-appdb
+          fi
