@@ -13,13 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
-      BASE_URL: https://br-billowing-sea-b96fnwqc-api.compute.c-7.eu-central-1.aws.neon.tech
+      BASE_URL: https://br-billowing-sea-b96fnwqc-medicalapi.compute.c-7.eu-central-1.aws.neon.tech
     steps:
       - name: Public API health must respond
         shell: bash
         run: |
           set -euo pipefail
-          curl --retry 3 --retry-delay 2 --max-time 30 -sS -H "Cache-Control: no-cache" -D /tmp/headers.txt -o /tmp/health.json "$BASE_URL/health?verification=deployment4"
+          curl --retry 3 --retry-delay 2 --max-time 30 -sS -H "Cache-Control: no-cache" -D /tmp/headers.txt -o /tmp/health.json "$BASE_URL/health?verification=medicalapi1"
           python3 - <<'PY'
           import json
           d=json.load(open('/tmp/health.json'))
@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --max-time 30 -sS -o /tmp/catalog.json "$BASE_URL/v1/catalog?locale=ar&verification=deployment4"
+          curl --max-time 30 -sS -o /tmp/catalog.json "$BASE_URL/v1/catalog?locale=ar&verification=medicalapi1"
           python3 - <<'PY'
           import json
           d=json.load(open('/tmp/catalog.json'))
@@ -42,7 +42,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --max-time 30 -sS -o /tmp/systems.json "$BASE_URL/v1/systems?locale=ar&verification=deployment4"
+          curl --max-time 30 -sS -o /tmp/systems.json "$BASE_URL/v1/systems?locale=ar&verification=medicalapi1"
           python3 - <<'PY'
           import json
           d=json.load(open('/tmp/systems.json'))
