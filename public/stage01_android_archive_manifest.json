@@ -1,0 +1,365 @@
+{
+  "repositoryName": "dawa-hayah-aistudio-android",
+  "branchName": "ai-studio/stage-01-native-foundation",
+  "zipFileName": "dawa-hayah-aistudio-android-stage01.zip",
+  "zipSizeBytes": 105198,
+  "zipSha256": "351756961cc33ab4fe49032e8ddb1d8104c9312142f986aa5fc1fe223052f48a",
+  "totalFiles": 71,
+  "files": [
+    {
+      "path": "settings.gradle.kts",
+      "sizeBytes": 534,
+      "sha256": "018deb5c24568373e2906918166589f8dcedb4af0efbc0a2cfb75e5954c762c2"
+    },
+    {
+      "path": "build.gradle.kts",
+      "sizeBytes": 267,
+      "sha256": "632ec1bfe71992b9190833e25d6508be89df3968be032814deea355212a2704a"
+    },
+    {
+      "path": "gradle.properties",
+      "sizeBytes": 136,
+      "sha256": "678c35a27eeda302d6a960484179d118d08fb1edf05c1b40745bc7aed6e88f03"
+    },
+    {
+      "path": "gradlew",
+      "sizeBytes": 753,
+      "sha256": "450d3744116431906ecaf0544dba881d3f67778b7589038154d3b7a935c2a205"
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "sizeBytes": 4233,
+      "sha256": "66aa2f67b8d36806f732113b92af0d82bfa64ac38a3f61bfb981a5565ac7919f"
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.properties",
+      "sizeBytes": 250,
+      "sha256": "3d91f0932da99885c41e9dc4e85c9f9a2d3bfef4f0ad87473014dc0827a94884"
+    },
+    {
+      "path": ".github/workflows/android-ci.yml",
+      "sizeBytes": 1696,
+      "sha256": "24a2b7849f449022f19b6ee0fcbbd819ac576968a69f9814692ed9cc9c4df40d"
+    },
+    {
+      "path": "app/build.gradle.kts",
+      "sizeBytes": 3913,
+      "sha256": "1f7c08e67107fd8a0f1975db77b8f0991ef17cabb9c1ac66d8e94286cdcaf811"
+    },
+    {
+      "path": "app/proguard-rules.pro",
+      "sizeBytes": 378,
+      "sha256": "b1c827b09ce89ef7cf9613208ef3123b2d8eac291c09b7810700fa6d7619eba0"
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "sizeBytes": 1394,
+      "sha256": "2aae8e8b051a2cabd31c8d2708daa6c7426e4b9225f905d63f95a74fb6fee018"
+    },
+    {
+      "path": "app/src/main/res/xml/network_security_config.xml",
+      "sizeBytes": 338,
+      "sha256": "463670d68c1a01287ccb53d28de9e846b3e64261868a8f4ea1cface1616ca15f"
+    },
+    {
+      "path": "app/src/main/res/values/strings.xml",
+      "sizeBytes": 428,
+      "sha256": "de6b3890be0d360931be056ea9cc7b795edbba03b50a41d6205c67376d5a130d"
+    },
+    {
+      "path": "app/src/main/res/values/themes.xml",
+      "sizeBytes": 339,
+      "sha256": "dc67c2a852de35b51d8237b8cccf3f0f81d2ba2824f91e5255ccba70b03f6cee"
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_dawa_hayah_logo.xml",
+      "sizeBytes": 1160,
+      "sha256": "333b5a9a345860d3e328f066739d941c45d83953ca0304cb31f8f8fa896b17de"
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_launcher_background.xml",
+      "sizeBytes": 330,
+      "sha256": "2ef079c64d61b7fb9bc82b0b70bcf26c1fe0c082b145e6603f8af5d38089abf0"
+    },
+    {
+      "path": "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "sizeBytes": 269,
+      "sha256": "af9570ba222d3d561e397bb1efa5a680679be8cde6f4da88e54ce5d998b17131"
+    },
+    {
+      "path": "app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "sizeBytes": 269,
+      "sha256": "af9570ba222d3d561e397bb1efa5a680679be8cde6f4da88e54ce5d998b17131"
+    },
+    {
+      "path": "app/src/main/assets/graphics/cor_anatomy_diagram.svg",
+      "sizeBytes": 1505,
+      "sha256": "30d9d7a59ba9f6060b416d38f01a19b3001b452d14e977f615e8eb7c0d016303"
+    },
+    {
+      "path": "app/src/main/assets/packs/pack-cardio-histology-ar-v1/manifest.json",
+      "sizeBytes": 1314,
+      "sha256": "9d8fbc167e664eff09ee38f754326e40a068205b2fb8cd5311fd9b13e9fc7197"
+    },
+    {
+      "path": "app/src/main/assets/packs/pack-cardio-histology-ar-v1/content/cardiac_conduction_ar.json",
+      "sizeBytes": 3219,
+      "sha256": "3cc74637daa3d6836166c8e89d9caead5ac2db8c0bf55ed9ee8605431575af64"
+    },
+    {
+      "path": "app/src/main/assets/packs/pack-cardio-histology-ar-v1/graphics/cor_conduction_vector.svg",
+      "sizeBytes": 698,
+      "sha256": "0fcd952a44a2ebb991661b33146c4d8efda2e0434f825b2adcd9aba23ccc862e"
+    },
+    {
+      "path": "app/src/main/assets/seed/base_seed_v1.json",
+      "sizeBytes": 20136,
+      "sha256": "1d6608fab7bcde2c59259a986c9435dfb03a78a5a186d4bb331e36e34f46edb7"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/DawaHayahApplication.kt",
+      "sizeBytes": 3466,
+      "sha256": "adca96ef221d281e23a92e7aa023dde0ce7c340ec91df8e24cc260ead511ada0"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/MainActivity.kt",
+      "sizeBytes": 10669,
+      "sha256": "d8f788ca4ffd640caba8c22136fb377f27a8d0f13a615d87576d0ec722044dba"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/core/locale/ArabicSearchNormalizer.kt",
+      "sizeBytes": 2670,
+      "sha256": "b38f27c97f6a4b6fe7d0febef9169b48408df51caa1b0d8f2da6917a38149b11"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/core/errors/AppResult.kt",
+      "sizeBytes": 2769,
+      "sha256": "9aba61b3b8c3ad647c3f682bedfe00f319945062ceba09d91ec1588bf7ddcd04"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/core/security/IntegrityVerifier.kt",
+      "sizeBytes": 2172,
+      "sha256": "79786cdedc458f1df22ba27098c3b3e3000f3bb3ac792d81bea8993d1ee0889a"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/core/contentpacks/Anatomy3DAssetContract.kt",
+      "sizeBytes": 6374,
+      "sha256": "a6d3f3db199263026a097fe54c4adf2135128a335ee6929fb3a4c8af3fca3b88"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/core/contentpacks/ContentPackDownloadWorker.kt",
+      "sizeBytes": 1983,
+      "sha256": "8d8866d97b0476e673722133dedd8e867f58d7988574240c00b00e55ee5931be"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/core/contentpacks/ContentPackManager.kt",
+      "sizeBytes": 12733,
+      "sha256": "00fef1eb3bcb8156e6c336089ba6d966ba58d744f6cf1a46e03e3ce7ba4d4db0"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/core/network/NetworkConnectivityObserver.kt",
+      "sizeBytes": 2186,
+      "sha256": "c1e013e2b4b01cd8fa26b0ad173b2c05cacf81fe8e88b8b0f0f6c9cff727140a"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/core/storage/UserPreferencesDataStore.kt",
+      "sizeBytes": 2604,
+      "sha256": "2b0b8632ca72a2addb300d51efce2efdafc0530057c8af1edba98cc3ec17f3dc"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/domain/model/ContentPackModels.kt",
+      "sizeBytes": 2047,
+      "sha256": "4282812269d35732093868a330f4985400e58d9118db6a2878b3e5e1462d6160"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/domain/model/KnowledgeModels.kt",
+      "sizeBytes": 2410,
+      "sha256": "4e3034d21fa6d993a9c1bcb887c79eb5c28aeb25b98857c1bf1949fbb7ef86ce"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/data/local/DawaHayahDatabase.kt",
+      "sizeBytes": 1918,
+      "sha256": "527ae9a93df010dc393021300f2591e58b9757ca3ca3523bf7c9750e93cab667"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/data/local/Entities.kt",
+      "sizeBytes": 4440,
+      "sha256": "2bfa63ac33ab4e0f6561fb7896464289fb196bd25fabdcde9615206869b79f9f"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/data/local/KnowledgeDao.kt",
+      "sizeBytes": 6008,
+      "sha256": "570f349b20acb4533e2435a84f50b1b338d74add363f670feeb83cbe77f01973"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/data/local/SeedDatabaseInitializer.kt",
+      "sizeBytes": 8639,
+      "sha256": "8b866cc131289b3f010645f42649b9195aa9f4876fc4a04cee1f735611f9d81d"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/data/remote/NeonApiService.kt",
+      "sizeBytes": 5791,
+      "sha256": "44d7a9224579c80d52286047483b61b10d16e062f334710ff3f443fa3bf0d346"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/data/repository/LocalFirstKnowledgeRepository.kt",
+      "sizeBytes": 11447,
+      "sha256": "c916c647054b14b043c9f87e9d5ad59a673e1047e1ce2596d870d2832c98da6c"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/ui/theme/Color.kt",
+      "sizeBytes": 1009,
+      "sha256": "aaa9602e0b1cabd9b9fa25e913956458d3c8ab74bb7d60389cd985e11e8e28ff"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/ui/theme/Theme.kt",
+      "sizeBytes": 4331,
+      "sha256": "aa28a2ff10df2c71e23f5187d5fdade3adc06d6ffa8dd3c58fc54ce53ac6b2c4"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/ui/navigation/DawaHayahDestination.kt",
+      "sizeBytes": 1279,
+      "sha256": "9e761c786f320e35bdd8491484886bafcbed2c22de1806b17c000f2cf4d5a902"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/ui/components/MedicalComponents.kt",
+      "sizeBytes": 7466,
+      "sha256": "5c72caf2523cabdb6e97eed11b06bac217900e917cb14ac66ec2250aad38699f"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/features/settings/MainViewModel.kt",
+      "sizeBytes": 8900,
+      "sha256": "90635d0cf7fdeb458bbe137212260d975b00ba1358e829a3b34a01681a89dd60"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/features/settings/SettingsAndAboutScreen.kt",
+      "sizeBytes": 10135,
+      "sha256": "728acb247737cac68089aa681baf99555ba848e2ec137f8a26be842e4e3d398e"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/features/home/HomeScreen.kt",
+      "sizeBytes": 14766,
+      "sha256": "2b5a856d1e1153b196b4843bfa1f1f8ce4632b47d00d321842072af7b5cef1e1"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/features/body/AnatomyScenesScreen.kt",
+      "sizeBytes": 8828,
+      "sha256": "8b4c034ad5da1eeabaa4751b4d1de9409ad02114df26d7fb4f494edbd57589bd"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/features/body/BodySystemsScreen.kt",
+      "sizeBytes": 9492,
+      "sha256": "d0adfc62791f6ba944cba0568ab83ada38feffb44350f485c312c8291037399c"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/features/diseases/DiseasesScreen.kt",
+      "sizeBytes": 3615,
+      "sha256": "49e22f845a0ad2c45f93dbd4b3375f662e31a9599a7385d1d05d2386ea6f19b7"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/features/medicines/MedicinesScreen.kt",
+      "sizeBytes": 3729,
+      "sha256": "212adc82f87796f72113b48d15c8a7a5c2ad511acb3160c18d19a01226ccd32f"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/features/library/MyLibraryScreen.kt",
+      "sizeBytes": 7910,
+      "sha256": "1ae0ceb2f3762c321958ea8f58eb227ba81ea2b63945c90c3d4bba1f03da9049"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/features/search/GlobalSearchScreen.kt",
+      "sizeBytes": 5632,
+      "sha256": "6312a14af7095c2cd7f389053a3147de4a91a1b46e3b37c1b11925f58f4ded53"
+    },
+    {
+      "path": "app/src/main/java/com/dawahayah/app/features/downloads/DownloadsScreen.kt",
+      "sizeBytes": 7768,
+      "sha256": "36d0bb3a7c773dcb20831423ab3294ad67be52480e59669ecf99fdafbd8e1067"
+    },
+    {
+      "path": "app/src/test/java/com/dawahayah/app/ArabicSearchNormalizerTest.kt",
+      "sizeBytes": 1310,
+      "sha256": "c1918469624cbe7042725ec94a908d421d57402e49ca683d2ad20481835344a6"
+    },
+    {
+      "path": "app/src/test/java/com/dawahayah/app/ContentPackIntegrityTest.kt",
+      "sizeBytes": 1867,
+      "sha256": "23f8f60c196ae1e406b8a33dd0b11a2cc1506b0fed5f52df80facb6383e77b9c"
+    },
+    {
+      "path": "app/src/androidTest/java/com/dawahayah/app/DawaHayahComposeOfflineTest.kt",
+      "sizeBytes": 971,
+      "sha256": "fa22a05a57f9a8eda04e7168e13c187f0d202862074e52e474dad1f5c5af3df5"
+    },
+    {
+      "path": "neon/migrations/001_stage01_dawa_hayah_schema.sql",
+      "sizeBytes": 10040,
+      "sha256": "c8780a31c29cb2ea9a1a56fa95213f8cf8f611a5e0c24f99c30f2e8e5ed8a6fc"
+    },
+    {
+      "path": "neon/openapi/dawa-hayah-neon-v1.openapi.yaml",
+      "sizeBytes": 7318,
+      "sha256": "c8045bee65b27799c9c5d9208113ab81a315600c9d3a185d495b3f2978e39e94"
+    },
+    {
+      "path": "neon/functions/v1-api-handler.ts",
+      "sizeBytes": 1862,
+      "sha256": "8298ebcf3a4c36fa7df77d3ad008d1784a93aeb5762abaf6d4e4e539358ae33e"
+    },
+    {
+      "path": "docs/AI_STUDIO_NATIVE_LIMITS.md",
+      "sizeBytes": 3337,
+      "sha256": "efb896b3f0216f61f92efe9ce44f6622d7cb0f633d71f1cf843afaf926ea20e8"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "sizeBytes": 3293,
+      "sha256": "175d36f837f2d9b2c69f4bdb956eca4fc81576f6d86c7f2ef1765bbed345c539"
+    },
+    {
+      "path": "docs/CONTENT_PACK_SPEC.md",
+      "sizeBytes": 3888,
+      "sha256": "058baf605d34783ca2e4d687d465d48320e61bbb91d8d813ac16679bb06a50fd"
+    },
+    {
+      "path": "docs/FIVE_STAGE_ROADMAP.md",
+      "sizeBytes": 4337,
+      "sha256": "a8e48eb379bae0323523939d9c3f0641768d6ca49db0ab249364363892dc9b76"
+    },
+    {
+      "path": "docs/MEDICAL_CONTENT_AND_LICENSES.md",
+      "sizeBytes": 3731,
+      "sha256": "474e1866bfe9a577f40a1ecf6cc81a801bc49ad3302b64b2a59637cbeafe9273"
+    },
+    {
+      "path": "docs/NEON_API_CONTRACT.md",
+      "sizeBytes": 3222,
+      "sha256": "102eb47c62e719cbc93a12f7c1a47447b7890d90b3ad6b4fa6747416d5405ec4"
+    },
+    {
+      "path": "docs/NEON_DEPLOYMENT_STEPS.md",
+      "sizeBytes": 3144,
+      "sha256": "b7e89fc784121d6f039f367f23ac08c4267ffb8c8555a39a0edf8f64eaaf3704"
+    },
+    {
+      "path": "docs/TEST_RESULTS_STAGE_01.md",
+      "sizeBytes": 5866,
+      "sha256": "ec82573c595d80517f8804d6bc329fbda9678db2a0a47562b7aa65935579cc04"
+    },
+    {
+      "path": "README.md",
+      "sizeBytes": 4203,
+      "sha256": "e875e9abcdd2ae759d9aff388325aaa285d25ed97409cbbe8d591e001b1694f3"
+    },
+    {
+      "path": ".gitignore",
+      "sizeBytes": 316,
+      "sha256": "47420006b1c9f733f6fccce781cff2b5173b6a5629749d84e00af084796bc8f3"
+    },
+    {
+      "path": ".env.example",
+      "sizeBytes": 904,
+      "sha256": "2031b199699254f6372eafa5f15325da9ec7e85c05fa08dfb622fdbe0a75c683"
+    }
+  ]
+}

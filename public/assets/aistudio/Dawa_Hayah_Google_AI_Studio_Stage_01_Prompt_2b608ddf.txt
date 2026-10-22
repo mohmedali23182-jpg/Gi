@@ -1,0 +1,301 @@
+# دواء وحياة — DAWA & HAYAH
+# GOOGLE AI STUDIO — ANDROID BUILD — PROMPT 01 OF 05
+# المرحلة الأولى: تأسيس تطبيق Android أصلي متكامل + Neon + Offline-first
+# الإصدار: 22 أكتوبر 2026
+
+اسم التطبيق: دواء وحياة
+الاسم الإنجليزي: Dawa & Hayah
+الشعار: علم الدواء لفهم الحياة
+الملكية والنسبة: من تطوير وبرمجة الدكتور الصيدلاني معتز العلقمي — اليمن، تعز — 2026 م.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[0] IMPORTANT: SELECT THE RIGHT PLATFORM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You are operating inside Google AI Studio Build mode. Before generating files, ensure the platform picker is ANDROID, not WEB. Build a REAL native Android app in Kotlin with Jetpack Compose, NOT React, NOT a PWA, NOT a wrapped website, NOT Flutter, and NOT a web-only mockup.
+
+نفّذ مشروع أندرويد فعليًا داخل Google AI Studio باستخدام Kotlin + Jetpack Compose + Material 3 وواجهة عربية أصلية RTL، مع الإنجليزية LTR والمصطلحات اللاتينية. أنشئ الشيفرة والواجهات والحفظ المحلي والاختبارات في مشروع Gradle فعلي؛ شغّل المعاينة عبر محاكي Android المدمج، وأصلح أخطاء Gradle أو Kotlin أو التطبيق بنفسك. لا تكتفِ بتصميم بصري أو تقرير نظري.
+
+حافظ على قيود Google AI Studio Android الحالية: Single Activity، Single Android app module، واجهات Compose، وعدم افتراض توفر NDK أو خادم Node.js داخل مشروع Android. نظّم الكود في packages واضحة داخل الوحدة الواحدة بدل إنشاء وحدات Gradle كثيرة. لا تفترض أن زر GitHub Sync متاح في مشاريع Android؛ إن كان غير متاح جهّز ZIP قابلًا للتصدير وهيكلًا يسهل رفعه يدويًا، واذكر ذلك بصراحة.
+
+هذه تجربة Android مستقلة للبحث عن أفضل نتائج Google AI Studio، وليست تعديلًا على مشروع Flutter الأصلي أو على مستودع Dawaa القائم. لا تمس أي مشروع آخر في GitHub أو Neon. إن احتجت مستودعًا مستقلاً اختر الاسم المقترح dawa-hayah-aistudio-android بشرط عدم التعارض وعدم ادعاء إنشائه دون فعل.
+
+لا تستخدم Firebase/Firestore أو Supabase لقاعدة المعرفة السحابية في هذا المشروع، ولو عرضت Google AI Studio دمجًا تلقائيًا معهما. القاعدة السحابية المعتمدة حصرًا هي Neon، والقاعدة المحلية Room/SQLite.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1] YOUR ROLE AND EXECUTION RULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+اعمل كفريق هندسي متكامل: Android Architect، Kotlin/Compose Senior Engineer، Offline-first Engineer، Neon/PostgreSQL Architect، Backend API Designer، 3D/Graphics Integration Planner، UI/UX Arabic Designer، Scientific Content Curator، Security/QA Engineer، وRelease Engineer.
+
+هذه «المرحلة الأولى فقط» من خمسة برومبتات متتابعة. مهمتك بناء أساس منتج قابل للتوسعة، لا إكمال الموسوعة كلها ولا اختلاق قاعدة بيانات أدوية ضخمة. نفّذ ثم اختبر ثم أصلح ثم أعد الاختبار حتى تحصل على نسخة تشغيل داخلي صحيحة.
+
+قواعد عدم الادعاء:
+- لا تذكر نجاح الربط بـNeon أو نشر Functions/Buckets/Migrations أو رفع GitHub إلا إذا أجريتها بالفعل وراجعت الاستجابة أو النتيجة.
+- لا تعرض واجهة تعمل ببيانات تجريبية محلية على أنها بيانات سحابية حقيقية.
+- لا تُصدر APK Beta للمستخدمين ولا تنشر Google Play Internal Testing الآن. المعاينة/البناء الداخلي مسموحان للفحص فقط.
+- لا تطلب من المستخدم إدخال DATABASE_URL أو مفاتيح Neon أو S3 داخل حقول الواجهة أو نسخها في الشيفرة أو الدردشة؛ تلك أسرار خادم حصريًا.
+- إذا لم تتوفر أدوات ربط Neon الخارجية، نفّذ تطبيق Android محليًا، وقدم ملفات migrations/OpenAPI/Function كمرفقات جاهزة للتشغيل خارج AI Studio، مع اعتبار التفعيل السحابي «غير منجز»، لا «مكتمل».
+- لا تبدأ البرومبت الثاني قبل أن يطلبه المالك صراحةً.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2] FIXED PRODUCT REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+أ) Android minSdk=26 (Android 8.0+) مع compile/target SDK حديث وآمن ومتوافق، واجعل الإعدادات قابلة لبناء APK Release ARM64-v8a 64-bit في البرومبت الثالث والخامس. استخدم أحدث نسخ مستقرة متوافقة من Kotlin/Compose/Room بعد التحقق. لا تنشئ signing secrets في Git.
+ب) تطبيق عربي افتراضيًا، اتجاه RTL صحيح للشاشات والمصطلحات المختلطة، الإنجليزية اختيارية؛ المصطلحات التشريحية لاتينية فقط حيث يوجد مصدر صحيح لها.
+ج) مجاني للاستخدام الدراسي، قراءة المحتوى الأساسي دون حساب أو اتصال، دعم الوضع الفاتح والداكن والتكبير والوصول.
+د) «Local-first, optional cloud content»: قاعدة المعرفة الأساسية داخل التطبيق؛ باقي المكتبة تُقرأ أونلاين عبر API أو تنزل اختيارياً على دفعات دقيقة إلى التخزين الدائم للهاتف، ثم تعمل دون شبكة.
+هـ) لا تحميل تلقائي لنماذج تشريحية ضخمة؛ المستخدم يختار نصوص/صور/مجسمات/قسم أو عضو محدد مع حجم معروف، وحذفها وإعادة تنزيلها.
+و) محتوى علمي موثق المصدر والترخيص. لا نسخ من UpToDate/BNF/DrugBank/أطالس مغلقة أو توليد تعليمات علاج وجرعات سريرية من النموذج دون مراجعة معتمدة.
+ز) الهدف النهائي موسوعة متعددة الأقسام: الأجهزة، التشريح 3D، الأمراض، الأدوية، الأصناف اليمنية والعربية، علوم الصيدلة، الحاسبات التعليمية، الحالات السريرية، الاختبارات والمكتبة. في هذه المرحلة نبني أساسًا حقيقيًا لهذه الأقسام، لا ندّعي اكتمالها.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[3] VISUAL DESIGN: PREMIUM MEDICAL APP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+صمّم منتجًا عالي الجودة بعناية؛ لا تستخدم قالبًا رتيبًا من أزرار رمادية أو صفحات نصية. الهوية:
+- Medical deep teal #123F42، turquoise #238982، gold #DAB977، ivory #F5F8F7، navy #24334B.
+- شعار أصلي بسيط مستوحى من كتاب العلوم/نبض الحياة/العناية الدوائية، بخطوط حادة نظيفة، مع شعار نصي عربي وإنجليزي، وأيقونة تطبيق adaptive icon ورسوم vector أصلية متى أمكن.
+- Compose Material 3، تدرج بصري صحيح، بطاقات موضوعات، Typography عربي واضح مثل Noto Sans Arabic عبر ملف قانوني متاح أو fallback نظامي، ومسافات متزنة.
+- واجهات Portrait مبدئيًا مع عدم انهيارها على شاشات صغيرة أو عند تكبير الخط، وطريقة عرض ملائمة للأجهزة اللوحية إذا أمكن.
+- تفاعلات حديثة دون حركة مبالغ بها، حالات skeleton/loading/error/empty/success، ألوان وتباين مناسبين، semantics للمساعدة والوصول.
+- خلفية وشاشة Splash تحمل «دواء وحياة» وليس اسم أداة الإنشاء، وصفحة «حول التطبيق» بالنص الرسمي والنسبة و2026.
+
+شريط التنقل السفلي من خمس وجهات:
+1. الرئيسية — Home
+2. جسم الإنسان — Body Systems
+3. الأمراض — Diseases
+4. الأدوية — Medicines
+5. مكتبتي — My Library
+
+عناصر/شاشات مساعدة فعلية:
+- البحث العام Search، تفاصيل الجهاز/العضو/المقال، تفاصيل المادة الفعالة (تعليمية آمنة فقط)، التنزيلات Downloads، الإعدادات Settings، المعلومات والمصادر، تراخيص الأصول، حالة الاتصال والبيانات المخزنة.
+- في الصفحة الرئيسية: متابعة القراءة، بطاقة «معلومة علمية موثقة»، شبكة الأقسام، عرض الحزم التي نُزلت، ومعاينة موضوع.
+- لكل عنوان: زر نسخ أو مشاركة للمعلومات المسموح بها، حفظ بالمفضلة، زر «قراءة عبر الإنترنت» عندما يكون متاحًا وزر مستقل «تنزيل للعمل دون إنترنت» عندما توجد حزمة.
+- لا تجعل زر التنزيل شكليًا، ولا تعرض أرقام تحميل وهمية، ولا روابط معطلة تقود إلى صفحات فارغة؛ الوظائف المستقبلية تظهر بوضوح كميزات قادمة وليست أزرار نشطة زائفة.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[4] NATIVE ARCHITECTURE AND REQUIRED PROJECT FILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+استخدم Single-activity Compose Android مع تنظيم packages داخل app module:
+- ui/theme, ui/components, ui/navigation
+- features/home, body, diseases, medicines, library, search, downloads, settings
+- data/local (Room database + DAOs + entities + seed)
+- data/remote (OkHttp/Retrofit HTTP clients + serializers + API contracts)
+- data/repository (single repository policy: local-first)
+- domain/model, domain/usecase
+- core/network, core/storage, core/contentpacks, core/errors, core/locale, core/security
+- assets/seed; assets/graphics; docs/...
+
+تقنيات مناسبة للمنصة:
+- Kotlin Coroutines + Flow، ViewModel، StateFlow، Navigation Compose، Material 3.
+- Room database بدل Drift لأن هذا المشروع Kotlin Native، DataStore للإعدادات، WorkManager للتنزيل الخلفي المتواصل، OkHttp/Retrofit أو Ktor Android لـ HTTPS، kotlinx.serialization أو Moshi، Coil للصور وفق ما يتوافق مع minSdk 26.
+- Dependency injection بسيطة أو Hilt إن كان مدعومًا ومستقرًا في AI Studio؛ لا تعقّد الوحدة الوحيدة بلا ضرورة.
+- Compose UI tests + unit tests قابلة للتشغيل، gradle wrapper وREADME، AndroidManifest بصلاحيات لازمة فقط INTERNET وACCESS_NETWORK_STATE إذا استخدمت.
+- التطبيق لا يعتمد على Google Play Services لتشغيل المعرفة الأساسية، ولا NDK. دعم WebView محدود للمجسمات 3D لاحقًا إذا أثبت التوافق؛ لا تجعل بقية التطبيق WebView.
+
+يجب أن يكون أسلوب الكود قابلًا للاختبار: data sources منفصلة، واجهات repositories، Result states، handling lifecycle، وعدم تشغيل IO على الـ Main thread.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[5] AN ACTUALLY USEFUL BUILT-IN KNOWLEDGE BASE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+نفّذ Room/SQLite مع نسخ مخطط وإضافة محتوى محلي أصلي كـ JSON أو prepackaged SQLite. يجب أن يفتح التطبيق من أول تشغيل في وضع الطيران ويقدم محتوى حقيقيًا مفيدًا وليس هيكلًا فارغًا.
+
+نماذج بيانات أساسية:
+BodySystem(id, nameAr, nameEn, descriptionAr, descriptionEn, sourceIds, lastReviewedAt?)
+Organ(id, systemId, nameAr, nameEn, latinName?, summaryAr, summaryEn, sourceIds)
+Disease(id, primarySystemId, nameAr, nameEn, introductionAr, introductionEn, citationIds, reviewStatus)
+ActiveIngredient(id, nameAr, nameEn, className, generalDescriptionAr, generalDescriptionEn, safetyNote, citationIds, reviewStatus)
+MedicalSource(id, title, url, publisher, publicationDate?, accessedAt?, license, attribution)
+LocalContent(id, canonicalId, revision, contentType, locale, sourceId, origin, publishedAt, reviewStatus)
+PackRecord(id, version, installState, installedAt, sizeBytes, locale, scope, assetQuality)
+Bookmark, ReadingProgress, DownloadTask, LocalAsset.
+
+ابنِ محتوى تأسيسيًا موجزًا، أصليًا وغير علاجي: مقدمة عن الجهاز القلبي والتنفسي والهضمي والعصبي والكلى، وأجزاء مختارة مع وظائف تشريحية، ومقدمة عن التصنيف الدوائي وآليات العمل بصورة تعليمية عامة. اجعل مصادره ظاهرة؛ يمكنك إضافة أسماء المصادر والروابط التي أمكن التحقق منها قانونيًا، ولكن لا تخترع DOI أو تاريخ مراجعة بشرية أو اعتمادًا طبيًا لم يحدث.
+
+التوازن المطلوب: 10-20 عنصر محتوى تأسيسي موثّق قدر الإمكان ومترابط؛ لا تملأ التطبيق بمعلومات علاجية أو جرعات غير مراجعة. عرّف المحتوى التعليمي الأولي بوسم صادق إذا لم تجر له مراجعة سريرية بشرية. الربط بين organId/systemId/topicId ينبغي أن يعمل محليًا. دعم فهرس بحث محلي عربي/إنجليزي وتطبيع همزات وتاء مربوطة وبدائل بحث شائعة دون تغيير النص المعروض.
+
+المفضلة وسجل القراءة واللغة وحجم الخط ومحتوى القراءة كلها تستمر بعد إغلاق التطبيق وإعادة فتحه. اختبر أول تشغيل بلا شبكة، وإعادة التشغيل وفتح العنصر نفسه.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[6] NEON CLOUD CONTRACT — WITHOUT EXPOSED SECRETS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Neon هي السحابة الرسمية الوحيدة:
+1. Neon PostgreSQL: metadata/articles/source registry/content versions/pack manifests and review statuses.
+2. Neon Object Storage: photos, diagrams, GLB/GLTF, downloadable JSON packs, licensed assets.
+3. Neon Functions: HTTPS API endpoints connecting Android clients to PostgreSQL and Storage; never connect Android directly to database or S3 with secret credentials.
+
+اعمل أولًا على مسار Android Client آمن، لا تتطلب هذه المرحلة تشغيل خادم داخل AI Studio Android لأنه غير مدعوم. عند وجود أدوات Neon الخارجية المصرح بها: أنشئ مشروعًا/فرعًا تجريبيًا منفصلًا باسم واضح، تحقق من المنطقة المدعومة لـ Object Storage + Functions، أنشئ ترحيلات SQL ودوال API ومخزنًا تجريبيًا وأجر اختبار استدعاء حقيقي. احفظ أدلة النجاح. إن لم تتوفر هذه الأدوات: قدم SQL وOpenAPI ووصف endpoint وعينات Neon Functions قابلة للنشر في بيئة مناسبة خارج مشروع أندرويد، واجعل وضع شبكة الاختبار قابلًا للاستخدام لاحقًا دون إعادة كتابة واجهات Android.
+
+أساس تصميم الجداول السحابية: body_systems, organs, diseases, active_ingredients, content_items, content_translations, sources, citations, media_assets, content_packs, content_pack_files, pack_dependencies, content_revisions, editorial_reviews, publication_status. استخدم UUID أو stable canonical ids وقيود وفهارس مناسبة؛ كن حذرًا من نشر مسودات علمية غير معتمدة.
+
+واجهات API المقترحة مع نسخة v1:
+GET /health
+GET /v1/catalog?locale=ar
+GET /v1/systems
+GET /v1/content/{id}?locale=ar
+GET /v1/packs?scope=organ&scopeId=...
+GET /v1/packs/{id}/manifest
+GET /v1/assets/{id}/access
+GET /v1/updates?fromRevision=...
+
+إن تعذر نشر Endpoints فعليًا، استخدم واجهة RemoteDataSource قابلة للحقن مع DisabledBackend state أو fixture موصوف بوضوح، وليس HTTP نجاحًا كاذبًا. اعرض «البيانات السحابية غير متصلة بعد» في القسم السحابي، مع استمرار الوظائف المحلية.
+
+التأمين: HTTPS، لا DATABASE_URL ولا NEON_API_KEY ولا AWS_SECRET_ACCESS_KEY ولا service credentials ولا كلمات مرور داخل BuildConfig أو Strings أو Assets أو Git؛ لا تجعل عنوان API وحده سرًّا. تحقق من المصدر والترخيص وحق إتاحة الملفات وتنزيلها، واعتمد public_read فقط للأصول التعليمية العامة المرخصة والـpresigned URLs للملفات الخاصة إذا لزم. لا تعرض بيانات مراجعين أو مسودات أو مهام إدارة إلى المستخدم العام.
+
+تأكد من أحدث توثيق Neon قبل تنفيذ العمل:
+https://neon.com/docs/storage/overview
+https://neon.com/docs/storage/buckets
+https://neon.com/docs/compute/functions/overview
+https://neon.com/docs/compute/functions/authentication
+https://neon.com/docs/introduction/regions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[7] OPTIONAL OFFLINE PACKS — THE KEY FEATURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+أنشئ محرك ContentPackManager واحدًا لحفظ نصوص وصور و3D مستقبلًا، دون تنزيل كامل بيانات Neon إلى جميع الأجهزة.
+
+المنطق:
+- البيانات الأساسية BaseSeed داخل APK.
+- محتوى غير منزلّ: يظهر الفهرس والحجم وعلامة «يحتاج الإنترنت»، مع عرض مباشر إذا API متاح.
+- تنزيل اختياري حسب نوع النطاق: system, organ, disease, medicine, lesson, image, model3d, locale, resolution.
+- يتم حفظ ملفات الحزم في app-specific persistent directory (ليس cache) + فهرسة metadata في Room.
+- عند فتح محتوى ثبت محليًا، يفتح فورًا دون شبكة ولا يستدعي API بصورة إجبارية.
+- حزم النصوص مستقلة عن حزم الصور وعن 3D، ويمكن تنزيل نموذج واحد فقط دون الجهاز بالكامل.
+- إظهار «تحتاج حزمة مصاحبة بحجم X» قبل تنزيل تبعية إضافية؛ لا تحميل خفي.
+
+Contract للحزمة:
+packId, version, scopeType, scopeId, titleAr, titleEn, language,
+contentKind, quality, schemaVersion, minAppVersion, sizeBytes,
+files: [{path, contentType, sizeBytes, sha256, assetId}],
+dependencies[], sources[], license, attribution, publishedAt.
+
+فترات التنزيل: queued/running/paused/failed/completed/updateAvailable/notDownloaded. أظهر حجم التحميل الحقيقي وتقدم bytes إن وُجد. إلغاء/إعادة محاولة/استئناف على مستوى الملف، وHTTP Range فقط بعد التحقق من دعمه. قيود Wi-Fi only وخيار تنزيل بيانات الهاتف، وتحذير عند عدم كفاية التخزين. طلب الملفات عبر API آمن.
+
+سلامة المحتوى:
+- تنزيل إلى مجلد مؤقت staging.
+- تحقق SHA-256 والحجم والنسخة والتراخيص ومعايير path traversal.
+- تثبيت ناجح للملفات ثم تحديث Room transaction/record؛ استعد التشغيل عند فشل جزئي دون تلف حزمة موجودة.
+- تحديث حزمة مختلفة النسخة دون مسح مفضلة أو ملاحظات المستخدم.
+- حذف الحزمة اختيارياً وحذف بياناتها المخزنة دون حذف BaseSeed.
+- افصل بين ذاكرة الصور العابرة للعرض عبر الإنترنت وبين «تنزيل دائم للعمل دون نت».
+
+إثبات مطلوب داخل هذه المرحلة: نموذج اختبار لحزمة نصية وصورة أصلية صغيرة موجودة في assets أو في Neon إذا وصل الاتصال؛ تشغيل نفس واجهة التنزيل/التثبيت/الحذف، ثم فتحها في وضع الطيران بعد حفظها الدائم. عند وجود Neon فعلي، اختبر حزمة فعلية من Object Storage مع bytes/hash حقيقيين؛ إن لم يوجد، صرّح أن اختبار Cloud→Offline ينتظر نشر Neon، ولا تختلق دليلًا.
+
+احترم قيود عمل Android background عبر WorkManager؛ استمرارية التحميل لا تبرر استنزاف البطارية أو تخزين البيانات خارج مجلد التطبيق. في هذه المرحلة لا تطلب من مستخدم أن ينزل 100–200 ميجابايت تلقائيًا.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[8] SOURCES, PROVENANCE, LICENSING AND MEDICAL SAFETY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+تأسيس سياسات موثقة للمصادر التالية، دون استيراد محتوى غير مرخص:
+- FDA/openFDA (https://open.fda.gov/apis/drug/label/)
+- DailyMed (https://dailymed.nlm.nih.gov/dailymed/app-support-web-services.cfm)
+- NLM RxNorm/RxNav (https://lhncbc.nlm.nih.gov/RxNav/)
+- WHO/Essential Medicines/AWaRe (https://www.who.int/)
+- NICE، BNF/BNFC، UpToDate، Lexicomp، AHFS، Martindale، DrugBank: مرجع تحقق/استشهاد أو ترخيص؛ ليس نسخًا تلقائيًا.
+- PubMed/Europe PMC، Crossref، ClinicalTrials.gov، WHO ICD-11، PubChem، ChEMBL: تجهيز طبقة الربط والبيانات الوصفية لمراحل تالية وفق واجهاتها وحدود استخدامها.
+- BodyParts3D وZ-Anatomy وOpen Anatomy Atlas: أصول 3D محتملة للمراحل اللاحقة، بشرط تدقيق الرخصة لكل أصل وبيانات الإسناد؛ لا تُدخلها بالجملة بلا تحقق.
+- الجهات اليمنية والعربية الرقابية كمصادر لإثبات تسجيل الأصناف؛ لا نساوي بين الظهور في قائمة والتوافر الحالي بالسوق.
+
+بنية provenance: source name، DOI/URL حقيقي، publisher، retrieval date، version/date of science evidence، reuse license، attribution، topic/source relationship، review status و reviewer عندما يوجد بالفعل. افصل «تاريخ استيراد» عن «تاريخ مراجعة بشرية». المحتوى الصحي الحساس لا يُنشر كجرعة أو بروتوكول معتمد إلا بعد اعتماد اختصاصي؛ لا تقدّم المشورة الشخصية ضمن تطبيق تعليمي.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[9] THREE-DIMENSIONAL ANATOMY READINESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+في هذه المرحلة الأولى: ضع Data Model وAssetPlayer contract لملفات 3D المستقبلية: asset id, anatomical label AR/EN/Latin, organId, objectKey, localPath, qualityLevel, license, attribution, triangle/size budget.
+
+أنشئ شاشة «المشاهد التشريحية» جميلة ومرتبطة بالأعضاء. إذا أمكن ضمن قيود Android Build الحالية عرض نموذج GLB بسيط أصلي ومرخص محليًا مع تدوير وتكبير، نفّذ ذلك عمليًا واختبره. يمكن استخدام WebView محلي ضيق النطاق لعزل عارض WebGL مع حزم JS محلية مرخّصة، دون تحميل CDN إجباري، لكن لا تجعل التطبيق نفسه WebView، ولا تُدخل مكتبات تحتاج NDK أو Native C++ غير مدعوم في AI Studio.
+
+إذا لم تسمح البيئة بعارض GLB حقيقي في هذه المرحلة، اعرض صور تشريحية تمهيدية مرخصة وأشر أن العارض الكامل يأتي في البرومبت الثاني؛ لا تقدم نموذجًا هندسيًا بلا أصل علمي على أنه تشريح دقيق. لا تنشئ زر تدوير 3D وهميًا.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10] TESTS: DO NOT JUST GENERATE CODE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+نفّذ اختبارات بقدر ما توفره Google AI Studio، وسجّل Passed/Failed/Not-run مع أدلة:
+1. Android Gradle build حقيقي، إصلاح أخطاء imports/dependencies/compilation.
+2. Android emulator preview: تشغيل، الرئيسية، التنقل بين الأقسام، فتح تفاصيل، تغيير اللغة، حفظ المفضلة، العودة دون فقد الحالة.
+3. First-launch offline: افتح التطبيق والإنترنت مفصول؛ يجب عرض 10–20 عنصرًا seed مباشرة وفهرس بحث محلي.
+4. Room migrations/version، عدم تكرار seed في كل فتح، persistence بعد إعادة تشغيل التطبيق.
+5. Download unit tests: metadata/manifest parsing، correct hash، wrong hash، missing files، cancel، retry، disk full، network unavailable.
+6. Online availability: عند توفر Neon المنشور، استدعِ health/catalog والـmanifest بالإنترنت الحقيقي، ثم تنزيل حزمة واختبرها في وضع الطيران. دون نشر Neon: mark integration blocked لا ناجح.
+7. Security: لا API Keys سرية داخل APK أو Gradle/Kotlin resources أو ZIP؛ عدم طباعة أسرار في logs؛ تحقق HTTPS، عدم إظهار unpublished content.
+8. AR/EN RTL/LTR: اتساق اتجاه text fields وخطوط وعرض أسماء لاتينية داخل العربية، Dark mode وحجم الخط وسلوك accessibility.
+9. اختبر API 26 في المحاكي إذا توفر؛ وإلا أثبت minSdk=26 في manifest/build وأدرج نقص اختبار الجهاز في التقرير.
+10. performance sanity: منع ANR في القراءة، والقوائم قابلة للتمرير على هاتف متوسط، عدم تحميل صور ثقيلة دفعة واحدة.
+11. إذا أمكن الوصول إلى GitHub Actions خارج Android Build: أضف CI للتحليل والاختبارات وGradle assemble. لا تقل إنه نجح حتى يظهر Run ناجح.
+
+أعد الاختبارات بعد كل إصلاح مهم. لا تزعم اكتمال اختبارات لم تسمح بها بيئة AI Studio.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11] GITHUB, DOCUMENTATION AND DELIVERY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+أسماء تنظيم المستودع التجريبي المقترح:
+dawa-hayah-aistudio-android
+فرع المرحلة: ai-studio/stage-01-native-foundation
+
+GitHub integration إن كانت موجودة بالفعل لهذا النوع من المشروع: ارفع commits مرتبة وافتح PR واعرض الحالة. إن لم تتوفر (وهو قيد موثق لمشروعات Android في AI Studio حاليًا)، تأكد من إمكان تصدير ZIP نظيف، أضف README وملفات CI والوثائق، وقدم طريقة الرفع الفعلية دون ادعاء أن المستودع نُشر. لا تلمس المستودع الأصلي moataz77549-byte/Dawaa، ولا مشاريع «ما يسطرون» وغيرها.
+
+ملفات التوثيق المطلوبة داخل التطبيق/الحزمة القابلة للتصدير (حتى إن كانت مجرد docs في الوحدة الوحيدة):
+- README.md — الهدف والمتطلبات والتشغيل
+- docs/AI_STUDIO_NATIVE_LIMITS.md — ما تدعمه بيئة Android وما يحتاج نشرًا خارجيًا
+- docs/FIVE_STAGE_ROADMAP.md — مسار البرومبتات الخمسة والنشر
+- docs/ARCHITECTURE.md — Room/Repository/Neon/API/download policy
+- docs/NEON_API_CONTRACT.md — endpoints + auth + OpenAPI schema
+- docs/NEON_DEPLOYMENT_STEPS.md — PostgreSQL/Storage/Functions ومتى يجب إنشاء Neon مستقل
+- docs/CONTENT_PACK_SPEC.md — manifest, integrity, staging, update/cancel/delete
+- docs/MEDICAL_CONTENT_AND_LICENSES.md — provenance والرخصة ومراجعة الجرعات
+- docs/TEST_RESULTS_STAGE_01.md — أدلة الفحص الفعلية والخطوات التي تعذرت
+- .gitignore و .env.example دون قيم سرية
+
+قواعد الإصدار المرحلي:
+البرومبت 1/5: تأسيس، دون نشر Beta أو Release عام.
+البرومبت 2/5: 3D وأجهزة الجسم والأمراض، لا Beta عام.
+البرومبت 3/5: الأدوية والمحتوى السريري المراجع وأول Beta 0.5.0 بعد نجاح بوابة الجودة (يعادل الوصول إلى المرحلة الخامسة من الخطة الأصلية ذات العشر مراحل).
+البرومبت 4/5: الأكاديمية، المصادر الموسعة، الإدارة والمراجعة.
+البرومبت 5/5: الاختبارات والإطلاق المستقر الأول 1.0.0 مع ARM64 64-bit APK موقع وفق إتاحة أدوات التوقيع الآمنة.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[12] STAGE-01 DEFINITION OF DONE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[ ] تم اختيار منصة Android وليس Web في AI Studio.
+[ ] Kotlin + Compose تطبيق حقيقي قابل للمعاينة والبناء، minSdk=26.
+[ ] واجهة عربية وإنجليزية عالية الجودة، شاشة رئيسية وشريط 5 تبويبات، تنقل فعلي.
+[ ] Room/SQLite content + search + bookmarks تعمل من أول تثبيت في وضع الطيران.
+[ ] شاشات إعدادات/مكتبة/تنزيلات ومصادر وترخيص، وظيفية دون أزرار زائفة.
+[ ] فصل واضح لقاعدة Neon السحابية عن قاعدة الجهاز وعن API، ولا أسرار داخل Android.
+[ ] حزمة اختيارية واحدة على الأقل تثبت محليًا وتُفتح بعد إعادة التشغيل دون شبكة.
+[ ] ContentPackManager يثبت سلامة SHA-256 ويرصد الأخطاء وحالات التنزيل.
+[ ] ملف API Contract + Neon migrations/SQL أو نشر backend فعلي إذا أتاحت الصلاحيات؛ لا تكذب بشأن التفعيل.
+[ ] استعداد هندسي لملفات 3D مع عرض محلي تجريبي إن سمحت البيئة، بلا ادعاء اكتمال الأطلس.
+[ ] اختبار البناء والمحاكي وحالات Offline/RTL موثق ومشكلات الأعطال معالجة.
+[ ] توثيق جاهز للتصدير وحفظ نسخة المشروع GitHub/ZIP بحسب الإمكان الفعلي.
+[ ] لا إصدار APK تجريبي للمستخدمين ولا بدء المرحلة الثانية.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[13] EXECUTION ORDER AND RESPONSE FORMAT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ابدأ الآن بالعمل البرمجي لا بكتابة خطة جديدة: (1) تحقق من Android picker، (2) أنشئ Gradle/Kotlin Compose single module، (3) ابنِ الهوية والشاشات، (4) نفذ Room/Seed/Repository، (5) نفذ Offline Pack Manager، (6) جهّز REST client وNeon contract ومصدر تجريبي واضح لو كان backend غير متاح، (7) جرّب المحاكي واصلح أي crash أو compile failure، (8) أضف التوثيق والاختبارات، (9) جهّز ZIP وGitHub إن أمكن، (10) سلّم التقرير النهائي.
+
+يجب أن يكون تقريرك الختامي بالعربية ويحتوي على:
+- ما تم بناؤه فعلًا مع شاشات شغالة.
+- ملف ZIP القابل للتصدير أو مستودع GitHub الذي تأكدت من إنشائه/مزامنته؛ لا تخترع روابط.
+- وضع Neon: متصل وجرّبت endpoint حقيقيًا، أم غير متصل ويحتاج نشرًا خارجيًا.
+- دليل عمل التطبيق دون الإنترنت، وحزمة التحميل وخاصية الفتح من التخزين المحلي.
+- نتائج Gradle/Emulator/Unit tests، والمعوقات بصيغة Passed/Failed/Not-run.
+- هل اجتازت المرحلة الأولى بوابة الجودة أم لا، وماذا يُصلح قبل البرومبت الثاني.
+- تأكيد عدم توزيع Beta وعدم البدء بالمرحلة التالية.
+
+لا تتوقف عند خطأ يمكن إصلاحه ضمن الأدوات المتاحة. لا تُخفِ محدودية Google AI Studio Android أو توهم بإجراء عمليات سحابية لم تُنفّذ.
+
+ابدأ التنفيذ الآن وركز على إنشاء تطبيق فعلي صالح للتوسعة لخمس مراحل حتى الإصدار النهائي.

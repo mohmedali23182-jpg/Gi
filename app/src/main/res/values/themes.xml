@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.DawaHayah" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">#123F42</item>
+        <item name="android:navigationBarColor">#123F42</item>
+        <item name="android:windowBackground">#F5F8F7</item>
+    </style>
+</resources>

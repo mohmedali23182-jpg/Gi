@@ -1,0 +1,33 @@
+{
+  "packId": "heart-model-low-v1",
+  "version": "1.0.0",
+  "scopeType": "model3d",
+  "scopeId": "organ-heart",
+  "titleAr": "حزمة المجسم التشريحي ثلاثي الأبعاد للقلب — دقة قياسية للجوال (Cor GLB Low LOD)",
+  "titleEn": "Heart 3D Anatomical Model Pack — Mobile Low LOD (Cor GLB)",
+  "language": "ar",
+  "contentKind": "model_3d_glb",
+  "quality": "low_mobile",
+  "schemaVersion": 2,
+  "minAppVersion": "0.2.0",
+  "sizeBytes": 50576,
+  "files": [
+    {
+      "path": "models/cor_chambers_low_v1.glb",
+      "contentType": "model/gltf-binary",
+      "sizeBytes": 50576,
+      "sha256": "56ed783e8a6b79c81972767616f67580fc5aec564b6368da5bc54b74c2659ef8",
+      "assetId": "asset-3d-cor-chambers-low-v1"
+    }
+  ],
+  "dependencies": [
+    "pack-cardio-histology-ar-v1"
+  ],
+  "sources": [
+    "src-ta2-fipat",
+    "src-openstax-anatomy-v2"
+  ],
+  "license": "CC-BY-4.0 (Dawa & Hayah Educational Schematic Multi-Mesh GLB — TA2 Labeled)",
+  "attribution": "دواء وحياة — الدكتور الصيدلاني معتز العلقمي — 2026 م (مسميات تشريحية وفق معيار TA2).",
+  "publishedAt": "2026-10-22T12:00:00Z"
+}

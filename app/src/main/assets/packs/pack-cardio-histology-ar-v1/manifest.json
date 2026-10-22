@@ -1,0 +1,38 @@
+{
+  "packId": "pack-cardio-histology-ar-v1",
+  "version": "1.0.0",
+  "scopeType": "organ",
+  "scopeId": "organ-heart",
+  "titleAr": "حزمة فسيولوجيا وتشريح نظام التوصيل القلبي (Cor)",
+  "titleEn": "Cardiac Conduction System Histology & Physiology Pack (Cor)",
+  "language": "ar",
+  "contentKind": "lesson_and_vector",
+  "quality": "standard",
+  "schemaVersion": 1,
+  "minAppVersion": "0.1.0",
+  "sizeBytes": 3917,
+  "files": [
+    {
+      "path": "content/cardiac_conduction_ar.json",
+      "contentType": "application/json",
+      "sizeBytes": 3219,
+      "sha256": "3cc74637daa3d6836166c8e89d9caead5ac2db8c0bf55ed9ee8605431575af64",
+      "assetId": "asset-cardiac-conduction-json-v1"
+    },
+    {
+      "path": "graphics/cor_conduction_vector.svg",
+      "contentType": "image/svg+xml",
+      "sizeBytes": 698,
+      "sha256": "0fcd952a44a2ebb991661b33146c4d8efda2e0434f825b2adcd9aba23ccc862e",
+      "assetId": "asset-cor-conduction-svg-v1"
+    }
+  ],
+  "dependencies": [],
+  "sources": [
+    "src-ta2-fipat",
+    "src-ncbi-bookshelf-statpearls"
+  ],
+  "license": "CC-BY-4.0 (Dawa & Hayah Original Educational Pack)",
+  "attribution": "دواء وحياة — الدكتور الصيدلاني معتز العلقمي — 2026 م.",
+  "publishedAt": "2026-10-22T00:00:00Z"
+}

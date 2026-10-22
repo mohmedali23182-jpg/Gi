@@ -1,0 +1,43 @@
+{
+  "canonicalId": "lesson-cardiac-conduction-physiology-01",
+  "packId": "pack-cardio-histology-ar-v1",
+  "organId": "organ-heart",
+  "systemId": "sys-cardiovascular",
+  "revision": 1,
+  "titleAr": "فسيولوجيا نظام التوصيل الكهربائي للقلب (Systema conducens cordis)",
+  "titleEn": "Physiology of the Cardiac Conduction System (Systema conducens cordis)",
+  "reviewStatus": "EDUCATIONAL_FOUNDATION_UNREVIEWED_CLINICALLY",
+  "importedAt": "2026-10-22T00:00:00Z",
+  "humanReviewedAt": null,
+  "license": "CC-BY-4.0 (Original Dawa & Hayah Educational Synthesis)",
+  "attribution": "دواء وحياة — إعداد علمي تأسيسي استناداً إلى Terminologia Anatomica ومراجع الفسيولوجيا القياسية",
+  "sectionsAr": [
+    {
+      "heading": "1. العقدة الجيبية الأذينية (Nodus sinuatrialis)",
+      "body": "تقع في الجدار العلوي للأذين الأيمن قرب فتحة الوريد الأجوف العلوي، وتعمل كمنظم ضربات طبيعي أولي للقلب (Pacemaker) عبر توليد كمون الفعل تلقائياً نتيجة تدفق أيونات الصوديوم والكالسيوم عبر قنوات الغشاء الخلوي."
+    },
+    {
+      "heading": "2. العقدة الأذينية البطينية وحزمة هيس (Nodus atrioventricularis & Fasciculus atrioventricularis)",
+      "body": "تؤخر العقدة الأذينية البطينية الإشارة الكهربائية لنحو 0.09 ثانية تقريباً في الحالة الفسيولوجية، مما يسمح بانقباض الأذينين وامتلاء البطينين بالدم قبل بدء الانقباض البطيني عبر حزمة هيس وألياف بوركينجي."
+    },
+    {
+      "heading": "3. الارتباط الدوائي التعليمي (غير علاجي)",
+      "body": "توضح دراسة قنوات الأيونات والمستقبلات الأدرينالية بيتا-1 (Beta-1 Adrenoceptors) في خلايا التوصيل كيف تؤثر الفئات الدوائية نظرياً على سرعة التوصيل (Dromotropy) ومعدل النبض (Chronotropy). هذه المادة مخصصة للفهم الفسيولوجي الأكاديمي فقط وليست دليلاً علاجياً."
+    }
+  ],
+  "sectionsEn": [
+    {
+      "heading": "1. Sinoatrial Node (Nodus sinuatrialis)",
+      "body": "Located in the superior wall of the right atrium near the superior vena cava opening, acting as the primary physiological pacemaker through spontaneous depolarization."
+    },
+    {
+      "heading": "2. Atrioventricular Node & His-Purkinje Network",
+      "body": "Introduces a brief physiological delay (~0.09s) ensuring complete atrial contraction and ventricular filling prior to ventricular systole."
+    },
+    {
+      "heading": "3. Educational Pharmacological Correlation (Non-Clinical)",
+      "body": "Understanding ion channels and Beta-1 adrenergic receptors in nodal tissue illustrates theoretical chronotropic and dromotropic modulation for academic study."
+    }
+  ],
+  "sourceIds": ["src-ta2-fipat", "src-ncbi-bookshelf-statpearls"]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "دواء وحياة — Dawa & Hayah (Stage 01 Android Native)",
+  "description": "علم الدواء لفهم الحياة — المرحلة الأولى: تأسيس تطبيق Android أصلي بلغة Kotlin وJetpack Compose وRoom مع محرك الحزم غير المتصلة وعقود Neon السحابية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

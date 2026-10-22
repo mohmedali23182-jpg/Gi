@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Background Medical Deep Teal Circle -->
+    <path
+        android:fillColor="#123F42"
+        android:pathData="M54,8A46,46 0 1,1 54,100A46,46 0 1,1 54,8Z" />
+    <!-- Open Book of Science Pages (Ivory #F5F8F7) -->
+    <path
+        android:fillColor="#F5F8F7"
+        android:pathData="M28,36 C38,34 48,37 54,43 C60,37 70,34 80,36 L80,72 C70,70 60,73 54,79 C48,73 38,70 28,72 Z" />
+    <!-- Life Pulse ECG Wave & Capsule Care Line (Gold #DAB977 & Turquoise #238982) -->
+    <path
+        android:strokeColor="#238982"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M33,55 L43,55 L48,44 L54,66 L60,49 L64,55 L75,55" />
+    <!-- Academic Gold Star / Pharmacological Node -->
+    <path
+        android:fillColor="#DAB977"
+        android:pathData="M54,24 L57,30 L63,31 L58.5,35 L60,41 L54,38 L48,41 L49.5,35 L45,31 L51,30 Z" />
+</vector>

@@ -1,0 +1,28 @@
+# Android & Gradle
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Signing keys & Secrets (NEVER COMMIT)
+*.jks
+*.keystore
+keystore.properties
+.env
+.env.local
+.env.*.local
+
+# Node / Preview Workbench
+node_modules/
+dist/
+.vite/

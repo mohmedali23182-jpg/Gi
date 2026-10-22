@@ -1,0 +1,39 @@
+{
+  "canonicalId": "lesson-respiratory-gas-exchange-v1",
+  "packId": "respiratory-diseases-ar-v1",
+  "organId": "organ-lungs",
+  "systemId": "sys-respiratory",
+  "revision": 1,
+  "titleAr": "حزمة الفيزيولوجيا المرضية لأمراض الجهاز التنفسي وتبادل الغازات السنخي",
+  "titleEn": "Respiratory Diseases Pathophysiology & Alveolar Gas Exchange Pack",
+  "reviewStatus": "verified",
+  "importedAt": "2026-10-22T12:00:00Z",
+  "humanReviewedAt": "2026-10-22T14:00:00Z",
+  "license": "CC-BY-4.0 (Dawa & Hayah Educational Pack)",
+  "attribution": "دواء وحياة — الدكتور الصيدلاني معتز العلقمي — 2026 م.",
+  "sectionsAr": [
+    {
+      "heading": "1. الغشاء السنخي الشعري وقانون فيك للانتشار (Alveolar-Capillary Membrane)",
+      "body": "يتكون الحاجز الدموي الهوائي في الأسناخ الرئوية (Alveoli pulmonis) من الخلايا الظهارية السنخية من النمط الأول (Type I Pneumocytes) والغشاء القاعدي المشترك والخلايا البطانية للشعيرات الرئوية، بسمك لا يتجاوز 0.2 إلى 0.5 ميكرومتر. تفرز الخلايا السنخية من النمط الثاني (Type II Pneumocytes) مادة السورفاكتانت (Pulmonary Surfactant) لخفض التوتر السطحي ومنع انخماص الأسناخ أثناء الزفير."
+    },
+    {
+      "heading": "2. الآلية المرضية لفرط الاستجابة القصبية في الربو مقابل الداء الرئوي الانسدادي المزمن",
+      "body": "في الربو القصبي (Bronchial Asthma) يقود الالتهاب اليوزيني بوساطة الخلايا التائية المساعدة (Th2) والإنترلوكينات (IL-4, IL-5, IL-13) إلى تشنج العضلات الملساء القصبية القابل للعكس. أما في الداء الرئوي الانسدادي المزمن (COPD) فيؤدي الإجهاد التأكسدي المزمن ونشاط العدلات والبلعميات إلى تحطيم الجدران السنخية (Emphysema) وتليف القصيبات الصغيرة."
+    }
+  ],
+  "sectionsEn": [
+    {
+      "heading": "1. Alveolar-Capillary Membrane & Fick Diffusion Law",
+      "body": "The blood-air barrier across pulmonary alveoli (Alveoli pulmonis) comprises Type I pneumocytes, fused basement membrane, and capillary endothelium (~0.2-0.5 micrometers thick). Type II pneumocytes secrete pulmonary surfactant to reduce surface tension and prevent alveolar collapse."
+    },
+    {
+      "heading": "2. Pathophysiology of Asthma vs. COPD Airway Remodeling",
+      "body": "In bronchial asthma, Th2-mediated eosinophilic inflammation drives reversible bronchospasm and mucus hypersecretion. In COPD, neutrophilic/macrophage protease imbalance destroys alveolar septa (emphysema) and narrows small airways."
+    }
+  ],
+  "sourceIds": [
+    "src-who-icd11",
+    "src-ncbi-bookshelf-statpearls",
+    "src-nice-guidelines"
+  ]
+}

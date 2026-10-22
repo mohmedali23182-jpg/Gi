@@ -1,0 +1,183 @@
+openapi: 3.1.0
+info:
+  title: Dawa & Hayah (دواء وحياة) — Neon Compute Functions API v1 (Stage 01 + Stage 02)
+  version: 1.2.0
+  description: >
+    Official HTTPS API contract between the native Android application (com.dawahayah.app)
+    and Neon Compute Functions backed by Neon PostgreSQL and S3-compatible Object Storage.
+    Zero database or object-storage credentials are ever embedded in the Android client.
+servers:
+  - url: https://api.dawahayah.org
+    description: Production Neon Compute Functions Endpoint (HTTPS Required)
+paths:
+  /health:
+    get:
+      summary: Check Neon PostgreSQL & Object Storage readiness
+      operationId: getHealth
+      responses:
+        '200':
+          description: Service healthy
+  /v1/catalog:
+    get:
+      summary: Retrieve published revision and content pack catalog
+      operationId: getCatalog
+      parameters:
+        - name: locale
+          in: query
+          schema:
+            type: string
+            default: ar
+      responses:
+        '200':
+          description: Catalog response
+  /v1/body-systems:
+    get:
+      summary: List all 13 human body systems with inter-system relations and drug class links
+      operationId: getBodySystems
+      parameters:
+        - name: locale
+          in: query
+          schema:
+            type: string
+            default: ar
+      responses:
+        '200':
+          description: Array of BodySystem records
+  /v1/organs/{id}:
+    get:
+      summary: Get detailed organ record including TA2 structures, histology sections, and figures
+      operationId: getOrganById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: locale
+          in: query
+          schema:
+            type: string
+            default: ar
+      responses:
+        '200':
+          description: Detailed Organ record
+  /v1/anatomy/models:
+    get:
+      summary: List 3D anatomical GLB models with triangle/byte budgets, SHA-256, and licenses
+      operationId: getAnatomyModels
+      parameters:
+        - name: organId
+          in: query
+          schema:
+            type: string
+        - name: quality
+          in: query
+          schema:
+            type: string
+            enum: [LOW_MOBILE, STANDARD_EDUCATIONAL, HIGH_ATLAS]
+      responses:
+        '200':
+          description: Array of Anatomy3DAsset records
+  /v1/diseases:
+    get:
+      summary: List structured diseases filtered by body system or ICD-11 code
+      operationId: getDiseases
+      parameters:
+        - name: systemId
+          in: query
+          schema:
+            type: string
+        - name: locale
+          in: query
+          schema:
+            type: string
+            default: ar
+      responses:
+        '200':
+          description: Array of Disease records
+  /v1/diseases/{id}:
+    get:
+      summary: Get full structured disease monograph (Sections A through J) and verified sources
+      operationId: getDiseaseById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: locale
+          in: query
+          schema:
+            type: string
+            default: ar
+      responses:
+        '200':
+          description: Detailed Disease record with A-J sections
+  /v1/content-packs:
+    get:
+      summary: List granular offline content packs (text, figures, 3D GLB LODs)
+      operationId: getContentPacks
+      parameters:
+        - name: scope
+          in: query
+          schema:
+            type: string
+        - name: scopeId
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of ContentPackManifest records
+  /v1/sources/{id}:
+    get:
+      summary: Retrieve verified medical/anatomical source metadata and license
+      operationId: getSourceById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: MedicalSource record
+  /v1/packs/{id}/manifest:
+    get:
+      summary: Get signed SHA-256 manifest for a specific content pack
+      operationId: getPackManifest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ContentPackManifest
+  /v1/assets/{id}/access:
+    get:
+      summary: Obtain public-read or short-lived Presigned URL for a 3D GLB or figure asset
+      operationId: getAssetAccess
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: NeonAssetAccessResponse
+  /v1/updates:
+    get:
+      summary: Delta sync of content and packs since a client revision
+      operationId: getUpdates
+      parameters:
+        - name: fromRevision
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: NeonUpdatesResponse

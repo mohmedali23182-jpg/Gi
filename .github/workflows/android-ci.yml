@@ -1,0 +1,54 @@
+name: Dawa & Hayah — Android CI & ARM64 Build Check
+
+on:
+  push:
+    branches:
+      - main
+      - "ai-studio/stage-**"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-test-and-build:
+    name: Stage 01 Quality Gate (Unit Tests + Lint + Debug/ARM64 Build)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Setup Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Security Scan — Verify No Exposed Neon or S3 Secrets
+        run: |
+          if grep -RInE "(postgresql://.*:.*@|AWS_SECRET_ACCESS_KEY\s*=\s*\"[^\"]+\"|NEON_API_KEY\s*=\s*\"[^\"]+\")" app/src/; then
+            echo "CRITICAL: Hardcoded cloud secret detected inside Android source tree!"
+            exit 1
+          fi
+          echo "Security check passed: zero hardcoded secrets in app/src/."
+
+      - name: Run Kotlin Unit Tests (Search Normalizer, SHA-256 Verifier, Pack Manager)
+        run: gradle :app:testDebugUnitTest --stacktrace
+
+      - name: Run Android Lint
+        run: gradle :app:lintDebug --stacktrace
+
+      - name: Assemble Internal Debug APK (For Stage 01 Verification Only — No Public Beta)
+        run: gradle :app:assembleDebug --stacktrace
+
+      - name: Upload Internal Verification Artifact (Not for Public Distribution)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dawa-hayah-stage01-internal-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 7

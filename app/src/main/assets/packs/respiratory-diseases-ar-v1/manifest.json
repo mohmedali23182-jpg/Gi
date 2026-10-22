@@ -1,0 +1,32 @@
+{
+  "packId": "respiratory-diseases-ar-v1",
+  "version": "1.0.0",
+  "scopeType": "system",
+  "scopeId": "sys-respiratory",
+  "titleAr": "حزمة أمراض الجهاز التنفسي وتبادل الغازات السنخي (عربي/إنجليزي)",
+  "titleEn": "Respiratory System Diseases & Alveolar Physiology Pack",
+  "language": "ar",
+  "contentKind": "disease_and_physiology_text",
+  "quality": "standard",
+  "schemaVersion": 2,
+  "minAppVersion": "0.2.0",
+  "sizeBytes": 3126,
+  "files": [
+    {
+      "path": "content/cardiac_conduction_ar.json",
+      "contentType": "application/json",
+      "sizeBytes": 3126,
+      "sha256": "51973fb66cb0a3b7642514190d721f8958b1651bc1855c5cf0331ff09f7d9ded",
+      "assetId": "asset-respiratory-diseases-json-v1"
+    }
+  ],
+  "dependencies": [],
+  "sources": [
+    "src-who-icd11",
+    "src-ncbi-bookshelf-statpearls",
+    "src-nice-guidelines"
+  ],
+  "license": "CC-BY-4.0 (Dawa & Hayah Educational Pack)",
+  "attribution": "دواء وحياة — الدكتور الصيدلاني معتز العلقمي — 2026 م.",
+  "publishedAt": "2026-10-22T12:00:00Z"
+}

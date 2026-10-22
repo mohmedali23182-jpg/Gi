@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" width="640" height="420">
+  <rect width="640" height="420" rx="20" fill="#123F42"/>
+  <g stroke="#238982" stroke-width="1" opacity="0.3">
+    <line x1="0" y1="70" x2="640" y2="70"/>
+    <line x1="0" y1="140" x2="640" y2="140"/>
+    <line x1="0" y1="210" x2="640" y2="210"/>
+    <line x1="0" y1="280" x2="640" y2="280"/>
+    <line x1="0" y1="350" x2="640" y2="350"/>
+  </g>
+  <!-- Stylized Anatomical Heart Chambers & Conduction Pathway (Original Educational Vector CC-BY-4.0 Dawa & Hayah) -->
+  <path d="M320 340 C220 275 170 205 190 135 C205 85 265 75 320 125 C375 75 435 85 450 135 C470 205 420 275 320 340 Z" fill="#195559" stroke="#F5F8F7" stroke-width="3"/>
+  <!-- Conduction System Nodes (SA Node -> AV Node -> Bundle of His -> Purkinje Fibers) -->
+  <circle cx="255" cy="145" r="10" fill="#DAB977"/>
+  <circle cx="315" cy="195" r="9" fill="#DAB977"/>
+  <path d="M255 145 Q285 165 315 195 L320 235 M320 235 L270 300 M320 235 L370 300" stroke="#DAB977" stroke-width="4" fill="none" stroke-dasharray="6 4"/>
+  <text x="235" y="125" fill="#F5F8F7" font-family="sans-serif" font-size="13" font-weight="bold">Nodus sinuatrialis (SA)</text>
+  <text x="335" y="198" fill="#F5F8F7" font-family="sans-serif" font-size="13" font-weight="bold">Nodus atrioventricularis (AV)</text>
+  <text x="245" y="378" fill="#DAB977" font-family="sans-serif" font-size="14" font-weight="bold">Cor — Cardiac Conduction System (Educational Vector)</text>
+</svg>
