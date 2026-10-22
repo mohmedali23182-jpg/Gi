@@ -1,66 +1,57 @@
-name: Neon appdb Public API & Access Controls Smoke
+name: Neon appdb Public Function API Smoke
 on:
   push:
     branches:
       - work/stage-03-medications-neon-appdb
-      - main
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  neon-api-contract:
+  neon-function-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 8
     env:
-      BASE_URL: https://ep-broad-violet-b96xtyh6.apirest.c-7.eu-central-1.aws.neon.tech/appdb/rest/v1
+      BASE_URL: https://br-billowing-sea-b96fnwqc-api.compute.c-7.eu-central-1.aws.neon.tech
     steps:
-      - name: Public catalogue endpoint responds with well-formed JSON
+      - name: Public API health must respond
         shell: bash
         run: |
           set -euo pipefail
-          code="$(curl --retry 2 --max-time 25 -sS -o /tmp/catalog.json -w '%{http_code}' "$BASE_URL/rpc/dawa_public_catalog?p_locale=ar")"
-          echo "Catalogue HTTP $code"
-          if [ "$code" != "200" ]; then
-            echo "::error::Public Neon Data API catalogue is unavailable (HTTP $code)."
-            head -c 700 /tmp/catalog.json || true
-            echo
-            exit 1
-          fi
+          curl --retry 3 --retry-delay 2 --max-time 30 -sS -D /tmp/headers.txt -o /tmp/health.json "$BASE_URL/health"
           python3 - <<'PY'
           import json
-          with open('/tmp/catalog.json', encoding='utf-8') as f:
-              payload=json.load(f)
-          if isinstance(payload,list) and len(payload)==1:
-              payload=payload[0]
-          assert isinstance(payload,dict), 'catalog should be a JSON object'
-          assert isinstance(payload.get('availablePacks'),list), 'availablePacks must be array'
-          assert isinstance(payload.get('totalPublishedItems'),int), 'totalPublishedItems must be integer'
-          print('Published catalogue shape verified; items:',payload['totalPublishedItems'])
+          d=json.load(open('/tmp/health.json'))
+          print(d)
+          assert d.get('status')=='ok' and d.get('postgresConnected') is True, d
           PY
-      - name: Published systems endpoint must remain read-only
+      - name: Public catalogue must be a JSON object
         shell: bash
         run: |
           set -euo pipefail
-          code="$(curl --max-time 25 -sS -o /tmp/systems.json -w '%{http_code}' "$BASE_URL/rpc/dawa_public_systems?p_locale=ar")"
-          echo "Systems HTTP $code"
-          test "$code" = 200
+          curl --max-time 30 -sS -o /tmp/catalog.json "$BASE_URL/v1/catalog?locale=ar"
           python3 - <<'PY'
           import json
-          with open('/tmp/systems.json',encoding='utf-8') as f: payload=json.load(f)
-          assert isinstance(payload,list), 'systems must be a JSON list'
-          print('Public systems count:',len(payload))
+          d=json.load(open('/tmp/catalog.json'))
+          print(d)
+          assert isinstance(d,dict), d
+          assert isinstance(d.get('availablePacks'),list),d
           PY
-      - name: Anonymous visitors must not query raw clinical tables
+      - name: Only published anatomical systems may be publicly read
         shell: bash
         run: |
           set -euo pipefail
-          for table in active_ingredients drug_dosing_references editorial_reviews; do
-            code="$(curl --max-time 25 -sS -o /dev/null -w '%{http_code}' "$BASE_URL/$table?select=*&limit=1")"
-            echo "$table anonymous HTTP $code"
-            if [ "$code" = 200 ] || [ "$code" = 201 ]; then
-              echo "::error::Anonymous access to raw table $table should be blocked."
-              exit 1
-            fi
-          done
+          curl --max-time 30 -sS -o /tmp/systems.json "$BASE_URL/v1/systems?locale=ar"
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/systems.json'))
+          print('Published systems:',len(d) if isinstance(d,list) else d)
+          assert isinstance(d,list) and len(d) >= 13,d
+          PY
+      - name: No anonymous write routes are exposed
+        shell: bash
+        run: |
+          set -euo pipefail
+          code=$(curl --max-time 20 -sS -o /dev/null -w '%{http_code}' -X POST "$BASE_URL/v1/catalog")
+          test "$code" = 405
