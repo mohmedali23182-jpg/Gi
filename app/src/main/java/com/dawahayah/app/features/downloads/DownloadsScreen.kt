@@ -32,6 +32,7 @@ fun DownloadsScreen(
     state: MainUiState,
     onInstallPack: (String, Boolean) -> Unit,
     onDeletePack: (String) -> Unit,
+    onRefreshCloudCatalog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val isAr = state.settings.language == AppLanguage.ARABIC
@@ -58,6 +59,12 @@ fun DownloadsScreen(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+        }
+
+        item {
+            OutlinedButton(onClick = onRefreshCloudCatalog) {
+                Text(if (isAr) "استعراض حزم Neon عبر الإنترنت (دون تنزيل)" else "Browse Neon packs online (no download)")
+            }
         }
 
         items(state.packs, key = { it.id }) { pack ->
