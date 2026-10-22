@@ -2,7 +2,7 @@ import postgres from "postgres";
 
 // Dawa & Hayah: public, read-only API. Neon injects DATABASE_URL into Functions.
 // This function never exposes PostgreSQL credentials or internal clinical drafts.
-const sql = postgres(process.env.DATABASE_URL, {
+const sql = postgres(process.env.DAWA_DATABASE_URL || process.env.DATABASE_URL, {
   max: 3, idle_timeout: 15, connect_timeout: 8, prepare: false
 });
 
