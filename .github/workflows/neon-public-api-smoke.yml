@@ -1,0 +1,64 @@
+name: Neon appdb Public API & Access Controls Smoke
+on:
+  push:
+    branches:
+      - work/stage-03-medications-neon-appdb
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  neon-api-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      BASE_URL: https://ep-broad-violet-b96xtyh6.apirest.c-7.eu-central-1.aws.neon.tech/appdb/rest/v1
+    steps:
+      - name: Public catalogue endpoint responds with well-formed JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl --retry 2 --max-time 25 -sS -o /tmp/catalog.json -w '%{http_code}' "$BASE_URL/rpc/dawa_public_catalog?p_locale=ar")"
+          echo "Catalogue HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::Public Neon Data API catalogue is unavailable (HTTP $code)."
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json
+          with open('/tmp/catalog.json', encoding='utf-8') as f:
+              payload=json.load(f)
+          if isinstance(payload,list) and len(payload)==1:
+              payload=payload[0]
+          assert isinstance(payload,dict), 'catalog should be a JSON object'
+          assert isinstance(payload.get('availablePacks'),list), 'availablePacks must be array'
+          assert isinstance(payload.get('totalPublishedItems'),int), 'totalPublishedItems must be integer'
+          print('Published catalogue shape verified; items:',payload['totalPublishedItems'])
+          PY
+      - name: Published systems endpoint must remain read-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl --max-time 25 -sS -o /tmp/systems.json -w '%{http_code}' "$BASE_URL/rpc/dawa_public_systems?p_locale=ar")"
+          echo "Systems HTTP $code"
+          test "$code" = 200
+          python3 - <<'PY'
+          import json
+          with open('/tmp/systems.json',encoding='utf-8') as f: payload=json.load(f)
+          assert isinstance(payload,list), 'systems must be a JSON list'
+          print('Public systems count:',len(payload))
+          PY
+      - name: Anonymous visitors must not query raw clinical tables
+        shell: bash
+        run: |
+          set -euo pipefail
+          for table in active_ingredients drug_dosing_references editorial_reviews; do
+            code="$(curl --max-time 25 -sS -o /dev/null -w '%{http_code}' "$BASE_URL/$table?select=*&limit=1")"
+            echo "$table anonymous HTTP $code"
+            if [ "$code" = 200 ] || [ "$code" = 201 ]; then
+              echo "::error::Anonymous access to raw table $table should be blocked."
+              exit 1
+            fi
+          done
