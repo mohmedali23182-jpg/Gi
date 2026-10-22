@@ -1,14 +1,10 @@
-import pg from "pg";
+import postgres from "postgres";
 
 // Dawa & Hayah: public, read-only API. Neon injects DATABASE_URL into Functions.
 // This function never exposes PostgreSQL credentials or internal clinical drafts.
-const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
-  max: 3,
-  idleTimeoutMillis: 15000,
-  connectionTimeoutMillis: 8000
+const sql = postgres(process.env.DATABASE_URL, {
+  max: 3, idle_timeout: 15, connect_timeout: 8, prepare: false
 });
-pool.on("error", (err) => console.error("Database pool unavailable:", err?.code ?? "unknown"));
 
 const json = (payload, status = 200) => new Response(JSON.stringify(payload), {
   status,
@@ -21,7 +17,7 @@ const json = (payload, status = 200) => new Response(JSON.stringify(payload), {
 });
 const validId = value => /^[a-zA-Z0-9._:-]{1,128}$/.test(value ?? "");
 const integerLimit = (input, defaultValue = 100) => Math.min(100, Math.max(1, Number.parseInt(input ?? String(defaultValue), 10) || defaultValue));
-const get = async (sql, args = []) => (await pool.query(sql, args)).rows;
+const get = async (statement, args = []) => await sql.unsafe(statement, args);
 const published = alias => `JOIN publication_status ps ON ps.code=${alias}.status_code AND ps.is_publicly_visible=TRUE`;
 
 async function packManifest(packId) {
