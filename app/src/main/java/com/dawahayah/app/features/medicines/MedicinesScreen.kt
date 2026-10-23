@@ -92,7 +92,7 @@ fun MedicinesScreen(
                 bodyText = if (isAr) ingredient.generalDescriptionAr else ingredient.generalDescriptionEn,
                 safetyNotice = ingredient.safetyNote,
                 metadataItems = listOf(
-                    "حالة المراجعة: ${ingredient.reviewStatus}",
+                    (if (isAr) "تعليمي فقط — لم تعتمد البيانات سريريًا" else "Educational only — clinical review not certified"),
                     "المصادر: ${ingredient.citationIds.joinToString(", ")}"
                 ),
                 isBookmarked = isBookmarked,
