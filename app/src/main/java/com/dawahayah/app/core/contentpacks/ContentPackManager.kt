@@ -122,8 +122,11 @@ class ContentPackManager(
             json.decodeFromString<ContentPackManifest>(manifestText)
         }
 
-        if (manifest.packId != packId || manifest.files.isEmpty() ||
+        if (!packId.matches(Regex("[a-zA-Z0-9_-]{1,128}")) ||
+            manifest.packId != packId || manifest.files.isEmpty() ||
             manifest.files.size > 300 || manifest.sizeBytes <= 0L ||
+            manifest.files.any { it.sizeBytes <= 0L } ||
+            manifest.files.sumOf { it.sizeBytes } != manifest.sizeBytes ||
             manifest.sizeBytes > 250L * 1024L * 1024L ||
             manifest.schemaVersion != 1
         ) {
@@ -161,63 +164,65 @@ class ContentPackManager(
                 )
             }
 
-            val rawBytes = try {
+            // Stream to app-private staging instead of buffering a 250 MB model in RAM.
+            // Reject untrusted paths, invalid asset metadata and oversized replies.
+            val stagedFile = File(packStagingDir, fileEntry.path)
+            try {
+                stagedFile.parentFile?.mkdirs()
+                if (!fileEntry.sha256.matches(Regex("[0-9a-fA-F]{64}")) ||
+                    fileEntry.sizeBytes <= 0L || fileEntry.sizeBytes > 250L * 1024L * 1024L
+                ) throw IOException("Invalid expected asset length or checksum")
+
                 if (remoteManifest == null) {
-                    context.assets.open("packs/$packId/${fileEntry.path}").use { it.readBytes() }
+                    context.assets.open("packs/$packId/${fileEntry.path}").use { input ->
+                        stagedFile.outputStream().buffered().use { output -> input.copyTo(output) }
+                    }
                 } else {
                     val access = when (val result = remoteDataSource.fetchAssetAccess(fileEntry.assetId)) {
                         is AppResult.Success -> result.data
                         is AppResult.Error -> throw IOException(result.error.messageEn)
                     }
-                    if (access.sha256 != fileEntry.sha256 ||
+                    if (!access.sha256.equals(fileEntry.sha256, ignoreCase = true) ||
                         access.sizeBytes != fileEntry.sizeBytes ||
                         !IntegrityVerifier.isSecureHttpsEndpoint(access.downloadUrl)
-                    ) throw IOException("Asset metadata verification failed")
-                    if (fileEntry.sizeBytes > 250L * 1024L * 1024L) {
-                        throw IOException("Asset size exceeds safety limit")
-                    }
+                    ) throw IOException("Asset metadata mismatch or URL is not HTTPS")
+
                     val connection = URL(access.downloadUrl).openConnection() as HttpsURLConnection
-                    connection.connectTimeout = 15000
-                    connection.readTimeout = 60000
+                    connection.connectTimeout = 15_000
+                    connection.readTimeout = 60_000
                     connection.instanceFollowRedirects = false
                     try {
-                        if (connection.responseCode !in 200..299) {
+                        if (connection.responseCode != HttpsURLConnection.HTTP_OK) {
                             throw IOException("Asset response HTTP ${connection.responseCode}")
                         }
+                        var received = 0L
                         connection.inputStream.use { input ->
-                            val output = java.io.ByteArrayOutputStream()
-                            val buffer = ByteArray(32 * 1024)
-                            var received = 0L
-                            while (true) {
-                                val n = input.read(buffer)
-                                if (n < 0) break
-                                received += n
-                                if (received > fileEntry.sizeBytes) throw IOException("Excessive asset bytes")
-                                output.write(buffer, 0, n)
+                            stagedFile.outputStream().buffered().use { output ->
+                                val buffer = ByteArray(32 * 1024)
+                                while (true) {
+                                    val n = input.read(buffer)
+                                    if (n < 0) break
+                                    if (n == 0) continue
+                                    received += n
+                                    if (received > fileEntry.sizeBytes) {
+                                        throw IOException("Asset exceeds declared byte length")
+                                    }
+                                    output.write(buffer, 0, n)
+                                }
                             }
-                            output.toByteArray()
                         }
                     } finally {
                         connection.disconnect()
                     }
                 }
+                if (simulateCorruptedHash) stagedFile.appendBytes(byteArrayOf(0x00))
             } catch (e: Exception) {
                 packStagingDir.deleteRecursively()
                 return@withContext failPack(currentRecord, AppError.GeneralFailure(
-                    reasonAr = "تعذر تحميل ملف الحزمة أو التحقق منه: ${fileEntry.path}",
-                    reasonEn = "Failed to obtain or verify pack asset: ${fileEntry.path}"
+                    reasonAr = "تعذر تنزيل ملف الحزمة أو التحقق منه: ${fileEntry.path}",
+                    reasonEn = "Failed to stream or verify content pack asset: ${fileEntry.path}"
                 ))
             }
-
-            val bytesToWrite = if (simulateCorruptedHash) {
-                rawBytes + byteArrayOf(0x00)
-            } else {
-                rawBytes
-            }
-
-            val stagedFile = File(packStagingDir, fileEntry.path)
-            stagedFile.parentFile?.mkdirs()
-            stagedFile.writeBytes(bytesToWrite)
 
             val actualHash = IntegrityVerifier.computeFileSha256(stagedFile)
             if (!actualHash.equals(fileEntry.sha256, ignoreCase = true) ||
@@ -269,11 +274,14 @@ class ContentPackManager(
         }
 
         // Parse lesson JSON from persistent storage to index in Room LocalContent
-        val lessonFile = File(persistentPackDir, "content/cardiac_conduction_ar.json")
-        val installedContentEntity = if (lessonFile.exists()) {
-            val lessonDto = json.decodeFromString<BundledPackLessonDto>(
+        val lessonFile = manifest.files
+            .firstOrNull { it.path.startsWith("content/") && it.path.endsWith(".json") }
+            ?.let { File(persistentPackDir, it.path) }
+        val installedContentEntity = if (lessonFile?.exists() == true) {
+            val lessonDto = runCatching { json.decodeFromString<BundledPackLessonDto>(
                 lessonFile.readText(Charsets.UTF_8)
-            )
+            ) }.getOrNull()
+            if (lessonDto == null) null else {
             val fullBodyAr = lessonDto.sectionsAr.joinToString("\n\n") { "${it.heading}\n${it.body}" }
             val fullBodyEn = lessonDto.sectionsEn.joinToString("\n\n") { "${it.heading}\n${it.body}" }
             LocalContentEntity(
@@ -297,6 +305,7 @@ class ContentPackManager(
                     fullBodyEn
                 )
             )
+            }
         } else {
             null
         }
