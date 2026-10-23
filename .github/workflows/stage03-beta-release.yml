@@ -1,0 +1,88 @@
+name: Dawa & Hayah Stage 03 Beta ARM64 APK
+
+on:
+  push:
+    branches: ["release/stage03-beta-arm64"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dawa-hayah-stage03-beta-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  beta:
+    name: Android 8+ ARM64 signed beta APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Setup Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+      - name: Scan production source for embedded credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -RInE '(postgresql://[^ ]+:[^ ]+@|npg_[A-Za-z0-9_-]{12,}|AWS_SECRET_ACCESS_KEY[[:space:]]*=[[:space:]]*"[^"]+"|NEON_API_KEY[[:space:]]*=[[:space:]]*"[^"]+")' app/src/main/; then
+            echo "::error::Production source contains possible database credentials."
+            exit 1
+          fi
+      - name: Android JVM unit tests
+        run: gradle :app:testDebugUnitTest --stacktrace
+      - name: Android lint
+        run: gradle :app:lintDebug --stacktrace
+      - name: Assemble Android ARM64 beta Release
+        run: gradle :app:assembleRelease --stacktrace
+      - name: Verify ARM64-only native libraries, package signing, and version
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=$(find app/build/outputs/apk/release -maxdepth 1 -name '*.apk' | head -1)
+          test -n "$APK"
+          test -s "$APK"
+          python3 - "$APK" <<'PY'
+          import sys,zipfile
+          path=sys.argv[1]
+          with zipfile.ZipFile(path) as z:
+              names=z.namelist()
+              native=[x for x in names if x.startswith('lib/') and x.endswith('.so')]
+              wrong=[x for x in native if not x.startswith('lib/arm64-v8a/')]
+              assert not wrong, 'non-arm64 native libs: '+str(wrong)
+              assert any(x.startswith('lib/arm64-v8a/') for x in native), 'no arm64 shared libraries'
+              print('ARM64 ABI verification passed', len(native), 'native libs')
+          PY
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK"
+          "$BUILD_TOOLS/aapt" dump badging "$APK" | grep -E "^(package:|sdkVersion:|native-code:)"
+          mkdir -p dist
+          cp "$APK" dist/Dawa-Hayah-v0.5.0-beta.1-android8-arm64.apk
+          cd dist
+          sha256sum Dawa-Hayah-v0.5.0-beta.1-android8-arm64.apk > SHA256SUMS.txt
+      - name: Upload ready-to-install beta APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dawa-Hayah-v0.5.0-beta.1-ARM64-APK
+          path: dist/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Publish prerelease asset after quality gates pass
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG=v0.5.0-beta.1-ci-${GITHUB_RUN_NUMBER}
+          gh release create "$TAG" dist/*.apk dist/SHA256SUMS.txt \
+            --title "Dawa & Hayah 0.5.0 Beta 1 — Android 8+ ARM64 (testing only)" \
+            --notes "Test-signed Android ARM64 release APK built after successful JVM tests, lint and APK signature verification. Educational content under review; not a stable medical reference. The temporary CI test certificate is not a production signing key and later upgrades may require uninstalling this beta. Neon API public read enabled; optional cloud content packs need separate end-to-end verification." \
+            --prerelease --target "$GITHUB_SHA"

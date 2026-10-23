@@ -9,6 +9,8 @@ import com.dawahayah.app.core.storage.UserPreferencesDataStore
 import com.dawahayah.app.data.local.DawaHayahDatabase
 import com.dawahayah.app.data.local.SeedDatabaseInitializer
 import com.dawahayah.app.data.remote.DisabledNeonDataSource
+import com.dawahayah.app.data.remote.DawaNeonDataApiService
+import com.dawahayah.app.data.remote.NeonDataApiRemoteDataSource
 import com.dawahayah.app.data.remote.NeonApiService
 import com.dawahayah.app.data.remote.RemoteContentDataSource
 import com.dawahayah.app.data.remote.RetrofitNeonDataSource
@@ -60,7 +62,14 @@ class AppContainer(context: Context) {
                 .client(client)
                 .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
                 .build()
-            RetrofitNeonDataSource(configuredUrl, retrofit.create(NeonApiService::class.java))
+            if (configuredUrl.trimEnd('/').endsWith("/rest/v1")) {
+                NeonDataApiRemoteDataSource(
+                    configuredUrl,
+                    retrofit.create(DawaNeonDataApiService::class.java)
+                )
+            } else {
+                RetrofitNeonDataSource(configuredUrl, retrofit.create(NeonApiService::class.java))
+            }
         } else {
             DisabledNeonDataSource()
         }

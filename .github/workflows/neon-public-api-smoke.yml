@@ -1,0 +1,58 @@
+name: Neon appdb Public Function API Smoke
+on:
+  push:
+    branches:
+      - work/stage-03-medications-neon-appdb
+      - integration/stage03-neon-function-android
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  neon-function-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      BASE_URL: https://br-steep-moon-b9kxm3uf-api.compute.c-7.eu-central-1.aws.neon.tech
+    steps:
+      - name: Public API health must respond
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --retry 3 --retry-delay 2 --max-time 30 -sS -H "Cache-Control: no-cache" -D /tmp/headers.txt -o /tmp/health.json "$BASE_URL/health?verification=medicalapi1"
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/health.json'))
+          print(d)
+          assert d.get('status')=='ok' and d.get('postgresConnected') is True, d
+          PY
+      - name: Public catalogue must be a JSON object
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --max-time 30 -sS -o /tmp/catalog.json "$BASE_URL/v1/catalog?locale=ar&verification=medicalapi1"
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/catalog.json'))
+          print(d)
+          assert isinstance(d,dict), d
+          assert isinstance(d.get('availablePacks'),list),d
+          PY
+      - name: Only published anatomical systems may be publicly read
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --max-time 30 -sS -o /tmp/systems.json "$BASE_URL/v1/systems?locale=ar&verification=medicalapi1"
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/systems.json'))
+          print('Published systems:',len(d) if isinstance(d,list) else d)
+          assert isinstance(d,list) and len(d) >= 13,d
+          PY
+      - name: No anonymous write routes are exposed
+        shell: bash
+        run: |
+          set -euo pipefail
+          code=$(curl --max-time 20 -sS -o /dev/null -w '%{http_code}' -X POST "$BASE_URL/v1/catalog")
+          test "$code" = 405

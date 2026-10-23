@@ -14,18 +14,21 @@ android {
         applicationId = "com.dawahayah.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0-stage01"
+        versionCode = 5
+        versionName = "0.5.0-beta.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
 
-        // Public API base URL only (empty in Stage 01 until Neon Functions are deployed externally).
-        // NEVER place DATABASE_URL, NEON_API_KEY, or S3 secrets in BuildConfig.
-        buildConfigField("String", "NEON_PUBLIC_API_BASE_URL", "\"\"")
-        buildConfigField("String", "STAGE_TAG", "\"STAGE_01_NATIVE_FOUNDATION\"")
+        // Neon Data API requires JWT; the public app uses the separate read-only Neon Function.
+        // This public HTTPS endpoint has no DB credentials or privileged API keys.
+        val neonDataApiUrl = providers.gradleProperty("NEON_PUBLIC_API_BASE_URL")
+            .orElse("https://br-steep-moon-b9kxm3uf-api.compute.c-7.eu-central-1.aws.neon.tech/")
+            .get()
+        buildConfigField("String", "NEON_PUBLIC_API_BASE_URL", "\"${neonDataApiUrl}\"")
+        buildConfigField("String", "STAGE_TAG", "\"STAGE_03_MEDICINES_DEVELOPMENT\"")
     }
 
     buildTypes {
@@ -35,6 +38,8 @@ android {
             versionNameSuffix = "-internal"
         }
         release {
+            // Production signing must use a stable protected keystore configured via CI.
+            // Never commit signing keys or silently reuse the beta test key.
             isMinifyEnabled = true
             isShrinkResources = true
             // ARM64-v8a 64-bit target configuration ready for Stage 03 (0.5.0 Beta) and Stage 05 (1.0.0 Release)

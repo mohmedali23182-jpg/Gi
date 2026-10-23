@@ -213,7 +213,8 @@ fun DawaHayahMainScaffold(
                     DownloadsScreen(
                         state = state,
                         onInstallPack = viewModel::installContentPack,
-                        onDeletePack = viewModel::deleteContentPack
+                        onDeletePack = viewModel::deleteContentPack,
+                        onRefreshCloudCatalog = viewModel::browseCloudCatalog
                     )
                 }
                 composable(AuxiliaryRoutes.ANATOMY_SCENES) {

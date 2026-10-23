@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -195,6 +196,20 @@ class MainViewModel(
 
     fun installContentPack(packId: String, simulateCorruptedHash: Boolean = false) {
         viewModelScope.launch {
+            val pack = uiState.value.packs.firstOrNull { it.id == packId }
+            if (pack?.isBundledOfflineDemoAvailable == false) {
+                val network = container.connectivityObserver.currentStatus()
+                if (!network.isConnected) {
+                    _transientBannerMessage.value = "لا يوجد اتصال بالإنترنت. المحتوى المحفوظ على الهاتف متاح دون إنترنت."
+                    return@launch
+                }
+                if (container.preferencesDataStore.settingsFlow.first().wifiOnlyDownloads &&
+                    !network.isUnmeteredWifi
+                ) {
+                    _transientBannerMessage.value = "التنزيل مضبوط على Wi-Fi فقط. يمكنك تغيير ذلك من الإعدادات."
+                    return@launch
+                }
+            }
             when (val res = container.knowledgeRepository.installPack(packId, simulateCorruptedHash)) {
                 is AppResult.Success -> {
                     _transientBannerMessage.value =
@@ -203,6 +218,17 @@ class MainViewModel(
                 is AppResult.Error -> {
                     _transientBannerMessage.value = res.error.messageAr
                 }
+            }
+        }
+    }
+
+    fun browseCloudCatalog() {
+        viewModelScope.launch {
+            val language = if (container.preferencesDataStore.settingsFlow.first().language == AppLanguage.ENGLISH) "en" else "ar"
+            when (val result = container.knowledgeRepository.discoverCloudPacks(language)) {
+                is AppResult.Success -> _transientBannerMessage.value =
+                    "تم تحديث قائمة الحزم المتاحة من Neon. حزم جديدة: " + result.data
+                is AppResult.Error -> _transientBannerMessage.value = result.error.messageAr
             }
         }
     }
