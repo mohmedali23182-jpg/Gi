@@ -1,0 +1,43 @@
+name: Neon Main appdb Function API Smoke
+on:
+  push:
+    branches: [backend/neon-public-read-api, main]
+    paths:
+      - .github/workflows/neon-main-function-smoke.yml
+      - neon/functions/public-api/index.js
+      - neon/functions/public-api/dist/index.mjs
+      - neon/functions/public-api/package.json
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  main-public-read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      API: https://br-steep-moon-b9kxm3uf-api.compute.c-7.eu-central-1.aws.neon.tech
+    steps:
+      - name: Assert live Neon connection and public content
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --retry 2 --fail-with-body --max-time 30 -sS "$API/health" > /tmp/health.json
+          curl --retry 2 --fail-with-body --max-time 30 -sS "$API/v1/catalog?locale=ar" > /tmp/catalog.json
+          curl --retry 2 --fail-with-body --max-time 30 -sS "$API/v1/systems?locale=ar" > /tmp/systems.json
+          curl --retry 2 --fail-with-body --max-time 30 -sS "$API/v1/medications?locale=ar" > /tmp/medicines.json
+          curl --retry 2 --fail-with-body --max-time 30 -sS "$API/v1/diseases?locale=ar" > /tmp/diseases.json
+          python3 - <<'PY'
+          import json
+          h=json.load(open('/tmp/health.json')); c=json.load(open('/tmp/catalog.json')); s=json.load(open('/tmp/systems.json'))
+          m=json.load(open('/tmp/medicines.json')); d=json.load(open('/tmp/diseases.json'))
+          assert h['status']=='ok' and h['postgresConnected'] is True
+          assert isinstance(c.get('availablePacks'),list)
+          assert isinstance(s,list) and len(s) > 0, 'No public foundational body systems available'
+          assert isinstance(m,list) and isinstance(d,list)
+          print('Public main Neon API smoke verified:',len(s),'body systems;',len(m),'public medication entries;',len(d),'public diseases')
+          PY
+      - name: Reject unapproved or mutating requests
+        run: |
+          set -euo pipefail
+          test "$(curl -sS --max-time 25 -o /dev/null -w '%{http_code}' "$API/v1/clinical-dosing")" = 404
+          test "$(curl -sS --max-time 25 -o /dev/null -w '%{http_code}' -X POST "$API/v1/catalog")" = 405

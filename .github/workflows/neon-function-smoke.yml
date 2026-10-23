@@ -1,0 +1,49 @@
+name: Neon Public Function Integration Smoke
+on:
+  push:
+    branches: [backend/neon-public-read-api]
+    paths: [.github/workflows/neon-function-smoke.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-read-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      BASE_URL: https://br-billowing-sea-b96fnwqc-api.compute.c-7.eu-central-1.aws.neon.tech
+    steps:
+      - name: Real HTTPS health endpoint checks PostgreSQL connectivity
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="$(curl --retry 2 --max-time 30 -sS -o /tmp/health.json -w '%{http_code}' "$BASE_URL/health")"
+          echo "Health HTTP $code"; head -c 500 /tmp/health.json; echo
+          test "$code" = 200
+          python3 - <<'PY'
+          import json
+          d=json.load(open("/tmp/health.json"))
+          assert d.get("status") == "ok"
+          assert d.get("postgresConnected") is True
+          PY
+      - name: Real published catalogue and system contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          for endpoint in "v1/catalog?locale=ar" "v1/systems?locale=ar"; do
+            code="$(curl --max-time 30 -sS -o /tmp/result.json -w '%{http_code}' "$BASE_URL/$endpoint")"
+            echo "$endpoint: HTTP $code"
+            test "$code" = 200
+            python3 -m json.tool /tmp/result.json >/dev/null
+          done
+      - name: Non-public clinical routes and mutating HTTP methods are rejected
+        shell: bash
+        run: |
+          set -euo pipefail
+          denied="$(curl --max-time 30 -sS -o /dev/null -w '%{http_code}' "$BASE_URL/v1/clinical-dosing")"
+          mutate="$(curl --max-time 30 -sS -X POST -o /dev/null -w '%{http_code}' "$BASE_URL/v1/catalog")"
+          echo "Clinical route HTTP $denied; mutation HTTP $mutate"
+          test "$denied" = 404
+          test "$mutate" = 405

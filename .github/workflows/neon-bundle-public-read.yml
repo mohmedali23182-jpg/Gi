@@ -1,0 +1,46 @@
+name: Bundle Neon Public Read Function
+on:
+  push:
+    branches:
+      - backend/neon-public-read-api
+    paths:
+      - neon/functions/public-api/index.js
+      - neon/functions/public-api/package.json
+      - .github/workflows/neon-bundle-public-read.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install and bundle vetted server-side API
+        working-directory: neon/functions/public-api
+        run: |
+          npm install --no-audit --no-fund
+          npx esbuild index.js --bundle --platform=node --target=node24 --format=esm --minify \
+            --banner:js="import{createRequire as ___cr}from'module';import{fileURLToPath as ___f}from'url';import{dirname as ___d}from'path';const require=___cr(import.meta.url);const __filename=___f(import.meta.url);const __dirname=___d(__filename);" \
+            --outfile=dist/index.mjs
+          node --check dist/index.mjs
+      - name: Store reproducible compiled Function for Neon deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f neon/functions/public-api/dist/index.mjs
+          if git diff --cached --quiet; then
+            echo "Bundle unchanged"
+            exit 0
+          fi
+          git commit -m "build(neon): bundle read-only public API for Neon Functions [skip ci]"
+          git push origin HEAD:backend/neon-public-read-api

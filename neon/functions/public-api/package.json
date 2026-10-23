@@ -1,0 +1,12 @@
+{
+  "name": "dawa-hayah-neon-public-read",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "dependencies": {
+    "postgres": "3.4.7"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12"
+  }
+}
