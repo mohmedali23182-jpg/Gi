@@ -18,9 +18,9 @@ import retrofit2.http.Query
 @Serializable
 data class NeonHealthResponse(
     val status: String,
-    val region: String,
-    val postgresConnected: Boolean,
-    val storageBucketReady: Boolean,
+    val region: String = "aws-eu-central-1",
+    val postgresConnected: Boolean = false,
+    val storageBucketReady: Boolean = false,
     val apiVersion: String = "v1"
 )
 
