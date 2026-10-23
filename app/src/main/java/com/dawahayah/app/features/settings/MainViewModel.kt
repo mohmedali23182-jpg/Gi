@@ -196,6 +196,20 @@ class MainViewModel(
 
     fun installContentPack(packId: String, simulateCorruptedHash: Boolean = false) {
         viewModelScope.launch {
+            val pack = uiState.value.packs.firstOrNull { it.id == packId }
+            if (pack?.isBundledOfflineDemoAvailable == false) {
+                val network = container.connectivityObserver.currentStatus()
+                if (!network.isConnected) {
+                    _transientBannerMessage.value = "لا يوجد اتصال بالإنترنت. المحتوى المحفوظ على الهاتف متاح دون إنترنت."
+                    return@launch
+                }
+                if (container.preferencesDataStore.settingsFlow.first().wifiOnlyDownloads &&
+                    !network.isUnmeteredWifi
+                ) {
+                    _transientBannerMessage.value = "التنزيل مضبوط على Wi-Fi فقط. يمكنك تغيير ذلك من الإعدادات."
+                    return@launch
+                }
+            }
             when (val res = container.knowledgeRepository.installPack(packId, simulateCorruptedHash)) {
                 is AppResult.Success -> {
                     _transientBannerMessage.value =
