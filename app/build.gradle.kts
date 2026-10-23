@@ -14,8 +14,8 @@ android {
         applicationId = "com.dawahayah.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 3
-        versionName = "0.3.0-stage03-dev"
+        versionCode = 5
+        versionName = "0.5.0-beta.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -38,6 +38,9 @@ android {
             versionNameSuffix = "-internal"
         }
         release {
+            // TEMPORARY BETA-ONLY SIGNING. Replace with protected CI release keystore before stable 1.0.0.
+            // Android debug signing is installable but not a production identity and may differ across CI runners.
+            signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = true
             isShrinkResources = true
             // ARM64-v8a 64-bit target configuration ready for Stage 03 (0.5.0 Beta) and Stage 05 (1.0.0 Release)
