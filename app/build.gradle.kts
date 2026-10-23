@@ -22,9 +22,10 @@ android {
             useSupportLibrary = true
         }
 
-        // Public PostgREST URL is safe to embed. Database credentials remain server-side.
+        // Neon Data API requires JWT; the public app uses the separate read-only Neon Function.
+        // This public HTTPS endpoint has no DB credentials or privileged API keys.
         val neonDataApiUrl = providers.gradleProperty("NEON_PUBLIC_API_BASE_URL")
-            .orElse("https://ep-broad-violet-b96xtyh6.apirest.c-7.eu-central-1.aws.neon.tech/appdb/rest/v1")
+            .orElse("https://br-steep-moon-b9kxm3uf-api.compute.c-7.eu-central-1.aws.neon.tech/")
             .get()
         buildConfigField("String", "NEON_PUBLIC_API_BASE_URL", "\"${neonDataApiUrl}\"")
         buildConfigField("String", "STAGE_TAG", "\"STAGE_03_MEDICINES_DEVELOPMENT\"")

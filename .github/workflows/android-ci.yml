@@ -6,6 +6,7 @@ on:
       - main
       - "ai-studio/stage-**"
       - "work/stage-**"
+      - "integration/stage03-**"
   pull_request:
     branches:
       - main

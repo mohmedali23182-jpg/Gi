@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - work/stage-03-medications-neon-appdb
+      - integration/stage03-neon-function-android
   workflow_dispatch:
 
 permissions:
@@ -13,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
-      BASE_URL: https://br-billowing-sea-b96fnwqc-medicalapi.compute.c-7.eu-central-1.aws.neon.tech
+      BASE_URL: https://br-steep-moon-b9kxm3uf-api.compute.c-7.eu-central-1.aws.neon.tech
     steps:
       - name: Public API health must respond
         shell: bash

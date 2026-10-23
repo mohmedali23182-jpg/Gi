@@ -121,7 +121,7 @@ fun DiseasesScreen(
                     metadataItems = listOf(
                         "System: ${disease.primarySystemId}",
                         "الأقسام: ${disease.sections.size} (A–J)",
-                        "حالة المراجعة: ${disease.reviewStatus}"
+                        (if (isAr) "معلومات تعليمية — التدقيق السريري مستقل عن وجود المراجع" else "Educational content — citations are not clinical review")
                     ),
                     isBookmarked = isBookmarked,
                     onBookmarkToggle = {
@@ -183,7 +183,7 @@ private fun DiseaseStructuredDetailCard(
                 items = listOf(
                     "WHO ICD-11: ${disease.icd11Code}",
                     if (isAr) "تاريخ الاستيراد: ${disease.importedAt}" else "Imported: ${disease.importedAt}",
-                    if (isAr) "المراجعة البشرية: ${disease.humanReviewedAt ?: "قيد المراجعة"}" else "Human Reviewed: ${disease.humanReviewedAt ?: "Pending"}"
+                    if (isAr) "المراجعة السريرية: غير معتمدة حتى التوثيق المهني" else "Clinical review: not certified until independently verified"
                 )
             )
 
